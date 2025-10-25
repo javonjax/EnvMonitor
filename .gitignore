@@ -4,3 +4,4 @@ sdkconfig
 sdkconfig.ci
 sdkconfig.old
 .clangd
+Kconfig.projbuild
