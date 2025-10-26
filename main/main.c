@@ -1,5 +1,6 @@
 #include "nvs_flash.h"
 #include "wifi.h"
+#include "mqtt.h"
 
 
 volatile int isConnected = 0;
@@ -21,6 +22,10 @@ void app_main(void)
     }
 
     wifi_init_sta();
+
+    if (isConnected) {
+      mqtt_app_start();
+    }
 
     while (1) {
       if (isConnected) {

@@ -3,7 +3,7 @@
 static EventGroupHandle_t s_wifi_event_group;   // FreeRTOS event group to signal when we are connected
 extern volatile int isConnected;                // Flag to make sure wifi is connected.
 static int s_retry_num = 0;                     
-static const char *TAG = "wifi station";
+const char *TAG = "wifi station";
 
 /**
  * @brief Handles events triggered by wifi.

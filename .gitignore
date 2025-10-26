@@ -5,3 +5,4 @@ sdkconfig.ci
 sdkconfig.old
 .clangd
 Kconfig.projbuild
+main/certs/
