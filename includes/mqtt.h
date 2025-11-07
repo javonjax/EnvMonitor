@@ -1,3 +1,5 @@
+#pragma once
+
 #include "mqtt_client.h"
 #include "esp_log.h"
 

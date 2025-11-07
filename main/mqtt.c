@@ -20,7 +20,7 @@ static void mqtt_event_handler(void *handler_args, esp_event_base_t base, int32_
     esp_mqtt_client_handle_t client = event->client;
     switch ((esp_mqtt_event_id_t)event_id) {
     case MQTT_EVENT_CONNECTED:
-        esp_mqtt_client_subscribe(client, SUB_TOPIC, 0);
+        esp_mqtt_client_subscribe(client, SUB_TOPIC, 0);    // Remove this line if theres no topic to subscribe to.
         ESP_LOGI(TAG, "MQTT_EVENT_CONNECTED");
         break;
 
