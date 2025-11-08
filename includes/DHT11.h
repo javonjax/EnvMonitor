@@ -13,6 +13,7 @@
 #include "freertos/task.h"
 #include "esp_timer.h"
 
+
 // Base DHT11 struct.
 typedef struct {
     gpio_num_t pin_num;
@@ -25,13 +26,6 @@ typedef enum {
 	DHT_TIMEOUT = 2
 } DHT_Status;
 
-// Base DHT11 task params struct.
-typedef struct {
-    DHT11_t *DHT11;
-    uint8_t *temperature;
-    uint8_t *humidity;
-    gpio_num_t led_pin;
-} DHT11_TaskParams_t;
 
 /**
  * @brief Create a new DHT11 struct.
