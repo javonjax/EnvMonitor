@@ -23,6 +23,6 @@ extern const uint8_t certificate_pem_crt_end[]   asm("_binary_certificate_pem_cr
 extern const uint8_t private_pem_key_start[] asm("_binary_private_pem_key_start");
 extern const uint8_t private_pem_key_end[]   asm("_binary_private_pem_key_end");
 
-extern const char *TAG;
+extern const char *WIFI_STATION_TAG;
 
 void mqtt_app_start(void);

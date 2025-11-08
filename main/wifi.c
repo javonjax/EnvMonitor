@@ -3,7 +3,7 @@
 static EventGroupHandle_t s_wifi_event_group;   // FreeRTOS event group to signal when we are connected
 extern volatile int isConnected;                // Flag to make sure wifi is connected.
 static int s_retry_num = 0;                     
-const char *TAG = "wifi station";
+const char *WIFI_STATION_TAG = "wifi station";
 
 /**
  * @brief Handles events triggered by wifi.
@@ -17,15 +17,15 @@ static void wifi_event_handler(void* arg, esp_event_base_t event_base,
         if (s_retry_num < ESP_MAXIMUM_RETRY) {
             esp_wifi_connect();
             s_retry_num++;
-            ESP_LOGI(TAG, "retry to connect to the AP");
+            ESP_LOGI(WIFI_STATION_TAG, "retry to connect to the AP");
         } else {
             xEventGroupSetBits(s_wifi_event_group, WIFI_FAIL_BIT);
         }
-        ESP_LOGI(TAG,"connect to the AP fail");
+        ESP_LOGI(WIFI_STATION_TAG,"connect to the AP fail");
         isConnected = 0;
     } else if (event_base == IP_EVENT && event_id == IP_EVENT_STA_GOT_IP) {
         ip_event_got_ip_t* event = (ip_event_got_ip_t*) event_data;
-        ESP_LOGI(TAG, "got ip:" IPSTR, IP2STR(&event->ip_info.ip));
+        ESP_LOGI(WIFI_STATION_TAG, "got ip:" IPSTR, IP2STR(&event->ip_info.ip));
         s_retry_num = 0;
         xEventGroupSetBits(s_wifi_event_group, WIFI_CONNECTED_BIT);
         isConnected = 1;
@@ -40,7 +40,7 @@ static void wifi_event_handler(void* arg, esp_event_base_t event_base,
  */
 void wifi_init_sta(void)
 {
-    ESP_LOGI(TAG, "Starting ESP_WIFI_MODE_STA");
+    ESP_LOGI(WIFI_STATION_TAG, "Starting ESP_WIFI_MODE_STA");
     s_wifi_event_group = xEventGroupCreate();
 
     ESP_ERROR_CHECK(esp_netif_init());
@@ -81,7 +81,7 @@ void wifi_init_sta(void)
     ESP_ERROR_CHECK(esp_wifi_set_config(WIFI_IF_STA, &wifi_config) );
     ESP_ERROR_CHECK(esp_wifi_start() );
 
-    ESP_LOGI(TAG, "wifi_init_sta finished.");
+    ESP_LOGI(WIFI_STATION_TAG, "wifi_init_sta finished.");
 
     /* Waiting until either the connection is established (WIFI_CONNECTED_BIT) or connection failed for the maximum
      * number of re-tries (WIFI_FAIL_BIT). The bits are set by event_handler() (see above) */
@@ -94,12 +94,12 @@ void wifi_init_sta(void)
     /* xEventGroupWaitBits() returns the bits before the call returned, hence we can test which event actually
      * happened. */
     if (bits & WIFI_CONNECTED_BIT) {
-        ESP_LOGI(TAG, "connected to ap SSID:%s",
+        ESP_LOGI(WIFI_STATION_TAG, "connected to ap SSID:%s",
                  WIFI_SSID);
     } else if (bits & WIFI_FAIL_BIT) {
-        ESP_LOGI(TAG, "Failed to connect to SSID:%s",
+        ESP_LOGI(WIFI_STATION_TAG, "Failed to connect to SSID:%s",
                  WIFI_SSID);
     } else {
-        ESP_LOGE(TAG, "UNEXPECTED EVENT");
+        ESP_LOGE(WIFI_STATION_TAG, "UNEXPECTED EVENT");
     }
 }
