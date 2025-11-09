@@ -3,91 +3,19 @@
 #include "mqtt.h"
 #include "DHT11.h"
 #include "cJSON.h"
-#include "esp_adc/adc_oneshot.h"
 #include "DHT11_Task.h"
+#include "MotionSensor_Task.h"
+#include "WaterLevelSensor_Task.h"
+#include "esp_adc/adc_cali.h"
 
-#define GPIO_LOW 0
-#define GPIO_HIGH 1
-#define DHT11_SIGNAL_PIN GPIO_NUM_2
-#define DHT11_LED_PIN GPIO_NUM_40
-#define MOTION_SENSOR_PIN GPIO_NUM_18
-#define MOTION_SENSOR_LED_PIN GPIO_NUM_17
-#define MOTION_SENSOR_BUTTON_PIN GPIO_NUM_16
-#define WATER_LEVEL_SENSOR_CHANNEL ADC_CHANNEL_4         // PIN 5
 
 extern esp_mqtt_client_handle_t mqtt_client;
 volatile int isConnected = 0;
-
-// Flags for controlling motion sensor behavior.
-uint8_t lastButtonStatus = 1;
-uint8_t useMotionDetection = 1;
-
-
-/**
- * @brief Enables motion activated lighting and publishes the current motion activation
- *        setting.
- * 
- */
-void vMotionSensor_Task(void *pvParameters) {
-    static int counter = 0;
-    while (1) {
-        counter++;
-        uint8_t buttonStatus = gpio_get_level(MOTION_SENSOR_BUTTON_PIN);
-        if (buttonStatus == GPIO_HIGH) {
-            if (lastButtonStatus == GPIO_LOW) {
-                useMotionDetection = !useMotionDetection;
-                gpio_set_level(MOTION_SENSOR_LED_PIN, GPIO_LOW);
-                if (useMotionDetection) {
-                    printf("Motion activated lights enabled.\n");
-                } else {
-                    printf("Motion activated lights disabled.\n");
-                }
-            }
-        }
-        lastButtonStatus = buttonStatus;
-
-        if (useMotionDetection) {
-            uint8_t motionDetected = gpio_get_level(MOTION_SENSOR_PIN);
-            if (motionDetected) {
-                printf("Motion detected.\n");
-                gpio_set_level(MOTION_SENSOR_LED_PIN, GPIO_HIGH);
-            } else {
-                gpio_set_level(MOTION_SENSOR_LED_PIN, GPIO_LOW);
-            }
-        }
-
-        if (counter == 80) {
-            cJSON *root = cJSON_CreateObject();
-            cJSON_AddBoolToObject(root, "motion detection enabled", useMotionDetection ? true : false);
-            char *json_str = cJSON_PrintUnformatted(root);
-            if (isConnected) {
-                int msg_id = esp_mqtt_client_publish(mqtt_client, PUB_TOPIC, json_str, 0, 0, 0);
-                if (msg_id != 0) {
-                    ESP_LOGI(WIFI_STATION_TAG, "Error sending data. Message ID: %d\n", msg_id);
-                } 
-            }
-            printf("Motion detection %s\n", useMotionDetection ? "on" : "off");
-            cJSON_Delete(root);
-            free(json_str);
-            counter = 0;
-        }
-        vTaskDelay(pdMS_TO_TICKS(250));
-    }
-}
-
-// void vWaterLevelSensor(void *pvParameters) {
-//     while (1) {
-//     int adc_raw;
-//     while (1) {
-//         adc_oneshot_read(adc1_handle, WATER_LEVEL_SENSOR_CHANNEL, &adc_raw);
-//         printf("ADC Raw: %d\n", adc_raw);
-//         vTaskDelay(pdMS_TO_TICKS(2000));
-//     }
-//     }
-// }
+adc_cali_handle_t adc_cali_handle;
+adc_oneshot_unit_handle_t adc1_handle;
 
 void app_main(void)
-{
+{   
     //Initialize NVS
     esp_err_t ret = nvs_flash_init();
     if (ret == ESP_ERR_NVS_NO_FREE_PAGES || ret == ESP_ERR_NVS_NEW_VERSION_FOUND) {
@@ -101,6 +29,14 @@ void app_main(void)
          * and call esp_log_level_set() before esp_wifi_init() to improve the log level of the wifi module. */
         esp_log_level_set("wifi", CONFIG_LOG_MAXIMUM_LEVEL);
     }
+
+    // Calibrate ADC
+    adc_cali_curve_fitting_config_t adc_cali_config = {
+        .unit_id = ADC_UNIT_1,
+        .atten = ADC_ATTEN_DB_12,
+        .bitwidth = ADC_BITWIDTH_DEFAULT,
+    };
+    ESP_ERROR_CHECK(adc_cali_create_scheme_curve_fitting(&adc_cali_config, &adc_cali_handle));
 
     // Start wifi station mode and mqtt client mode.
     wifi_init_sta();
@@ -177,7 +113,6 @@ void app_main(void)
     /* Motion sensor end */
 
     /* Water level sensor start */
-    adc_oneshot_unit_handle_t adc1_handle;
     adc_oneshot_unit_init_cfg_t adc1_init_config = {
         .unit_id = ADC_UNIT_1,
     };
@@ -192,7 +127,7 @@ void app_main(void)
     /* Water level sensor end */
 
     // Create tasks.
-    xTaskCreate(vDHT11_Task, "DHT11", 4096, &DHT11_TaskParams, 2, NULL);
+    xTaskCreate(vDHT11_Task, "DHT11", 4096, &DHT11_TaskParams, 1, NULL);
     xTaskCreate(vMotionSensor_Task, "Motion activated lights", 4096, NULL, 1, NULL);
-    
+    xTaskCreate(vWaterLevelSensor_Task, "Water level sensor", 4096, NULL, 1, NULL);
 }
