@@ -1,3 +1,5 @@
+#pragma once
+
 #include "DHT11.h"
 #include "mqtt.h"
 #include "esp_log.h"

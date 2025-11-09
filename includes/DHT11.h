@@ -13,6 +13,9 @@
 #include "freertos/task.h"
 #include "esp_timer.h"
 
+// Configure pin numbers here.
+#define DHT11_SIGNAL_PIN GPIO_NUM_2
+#define DHT11_LED_PIN GPIO_NUM_40
 
 // Base DHT11 struct.
 typedef struct {
