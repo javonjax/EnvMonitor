@@ -1,7 +1,7 @@
 #include "wifi.h"
 
-static EventGroupHandle_t s_wifi_event_group;   // FreeRTOS event group to signal when we are connected
-extern volatile int isConnected;                // Flag to make sure wifi is connected.
+static EventGroupHandle_t s_wifi_event_group;        // FreeRTOS event group to signal when we are connected
+extern bool isWifiConnected;                         // Flag to make sure wifi is connected.
 static int s_retry_num = 0;                     
 const char *WIFI_STATION_TAG = "wifi station";
 
@@ -22,24 +22,17 @@ static void wifi_event_handler(void* arg, esp_event_base_t event_base,
             xEventGroupSetBits(s_wifi_event_group, WIFI_FAIL_BIT);
         }
         ESP_LOGI(WIFI_STATION_TAG,"connect to the AP fail");
-        isConnected = 0;
+        isWifiConnected = false;
     } else if (event_base == IP_EVENT && event_id == IP_EVENT_STA_GOT_IP) {
         ip_event_got_ip_t* event = (ip_event_got_ip_t*) event_data;
         ESP_LOGI(WIFI_STATION_TAG, "got ip:" IPSTR, IP2STR(&event->ip_info.ip));
         s_retry_num = 0;
         xEventGroupSetBits(s_wifi_event_group, WIFI_CONNECTED_BIT);
-        isConnected = 1;
+        isWifiConnected = true;
     }
 }
 
-/**
- * @brief Initialize ESP32 in wifi station mode.
- * 
- * Make sure to set wifi ssid and password. The simplest way to do this is in
- * the ESP-IDF config.
- */
-void wifi_init_sta(void)
-{
+void wifi_init_sta(void) {
     ESP_LOGI(WIFI_STATION_TAG, "Starting ESP_WIFI_MODE_STA");
     s_wifi_event_group = xEventGroupCreate();
 

@@ -1,14 +1,16 @@
 #include "MotionSensor_Task.h"
 
-extern volatile int isConnected;
-extern esp_mqtt_client_handle_t mqtt_client;
+extern bool isMQTTConnected;
+extern QueueHandle_t dataQueue;
 
 void vMotionSensor_Task(void *pvParameters) {
-    // Flags for controlling motion sensor behavior.
-    static uint8_t lastButtonStatus = 1;
-    static uint8_t useMotionDetection = 1;
-    static int counter = 0;
-    
+    uint8_t lastButtonStatus = 1;
+    uint8_t useMotionDetection = 1;
+    int counter = 0;
+    data_queue_msg_t msg = { 
+                .source = MOTION_SENSOR
+    };
+
     while (1) {
         counter++;
         uint8_t buttonStatus = gpio_get_level(MOTION_SENSOR_BUTTON_PIN);
@@ -36,18 +38,10 @@ void vMotionSensor_Task(void *pvParameters) {
         }
 
         if (counter == 80) {
-            cJSON *root = cJSON_CreateObject();
-            cJSON_AddBoolToObject(root, "motion detection enabled", useMotionDetection ? true : false);
-            char *json_str = cJSON_PrintUnformatted(root);
-            if (isConnected) {
-                int msg_id = esp_mqtt_client_publish(mqtt_client, PUB_TOPIC, json_str, 0, 0, 0);
-                if (msg_id != 0) {
-                    ESP_LOGI(WIFI_STATION_TAG, "Error sending data. Message ID: %d\n", msg_id);
-                } 
+            msg.msg_data.motionDetectionStatus = useMotionDetection ? "enabled" : "disabled";
+            if (isMQTTConnected) {
+                xQueueSend(dataQueue, &msg, portMAX_DELAY);
             }
-            printf("Motion detection %s\n", useMotionDetection ? "on" : "off");
-            cJSON_Delete(root);
-            free(json_str);
             counter = 0;
         }
         vTaskDelay(pdMS_TO_TICKS(250));

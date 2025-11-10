@@ -11,4 +11,11 @@
 #define WIFI_CONNECTED_BIT BIT0
 #define WIFI_FAIL_BIT      BIT1
 
+
+/**
+ * @brief Initialize ESP32 in wifi station mode.
+ * 
+ * Make sure to set wifi ssid and password. The simplest way to do this is in
+ * the ESP-IDF config.
+ */
 void wifi_init_sta(void);

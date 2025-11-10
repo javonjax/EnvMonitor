@@ -6,13 +6,16 @@
 #include "DHT11_Task.h"
 #include "MotionSensor_Task.h"
 #include "WaterLevelSensor_Task.h"
+#include "Publisher_Task.h"
 #include "esp_adc/adc_cali.h"
 
 
 extern esp_mqtt_client_handle_t mqtt_client;
-volatile int isConnected = 0;
+bool isWifiConnected = false;
+bool isMQTTConnected = false;
 adc_cali_handle_t adc_cali_handle;
 adc_oneshot_unit_handle_t adc1_handle;
+QueueHandle_t dataQueue;
 
 void app_main(void)
 {   
@@ -41,7 +44,8 @@ void app_main(void)
     // Start wifi station mode and mqtt client mode.
     wifi_init_sta();
 
-    if (isConnected) {
+    if (isWifiConnected) {
+        printf("starting mqtt\n");
       mqtt_app_start();
     }
 
@@ -126,7 +130,12 @@ void app_main(void)
     adc_oneshot_config_channel(adc1_handle, WATER_LEVEL_SENSOR_CHANNEL, &water_level_channel_config); 
     /* Water level sensor end */
 
+    // Create queue for device messages. 
+    dataQueue = xQueueCreate(10, sizeof(data_queue_msg_t));
+
     // Create tasks.
+    printf("creating tasks\n");
+    xTaskCreate(vPublisher_Task, "MQTT Publisher", 4096, NULL, 3, NULL);
     xTaskCreate(vDHT11_Task, "DHT11", 4096, &DHT11_TaskParams, 1, NULL);
     xTaskCreate(vMotionSensor_Task, "Motion activated lights", 4096, NULL, 1, NULL);
     xTaskCreate(vWaterLevelSensor_Task, "Water level sensor", 4096, NULL, 1, NULL);

@@ -13,6 +13,34 @@
 #define SUB_TOPIC CONFIG_AWS_IOT_CORE_SUB_TOPIC
 
 /**
+ * Queue message sources.
+ */
+typedef enum {
+    DHT11,
+    MOTION_SENSOR,
+    WATER_LEVEL_SENSOR
+} msg_source_t;
+
+/**
+ * Base struct for queue messages.
+ */
+typedef struct {
+    msg_source_t source;
+    union {
+        struct {
+            uint8_t temp;
+            uint8_t humidity;
+        } DHT11_Data;
+
+        char *waterLevel;
+
+        char *motionDetectionStatus;
+    } msg_data;
+} data_queue_msg_t;
+
+extern QueueHandle_t dataQueue;
+
+/**
  * Certs for AWS IoT Core.
  * Make sure to embed the text files in CMakeLists.txt if you use this method.
  */
@@ -25,4 +53,7 @@ extern const uint8_t private_pem_key_end[]   asm("_binary_private_pem_key_end");
 
 extern const char *WIFI_STATION_TAG;
 
+/**
+ * @brief Initialize and start the MQTT client.
+ */
 void mqtt_app_start(void);

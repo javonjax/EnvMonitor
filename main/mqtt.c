@@ -1,7 +1,7 @@
 #include "mqtt.h"
 
 esp_mqtt_client_handle_t mqtt_client;
-
+extern bool isMQTTConnected;     
 
 /*
  * @brief Event handler registered to receive MQTT events
@@ -13,18 +13,19 @@ esp_mqtt_client_handle_t mqtt_client;
  * @param event_id The id for the received event.
  * @param event_data The data for the event, esp_mqtt_event_handle_t.
  */
-static void mqtt_event_handler(void *handler_args, esp_event_base_t base, int32_t event_id, void *event_data)
-{
+static void mqtt_event_handler(void *handler_args, esp_event_base_t base, int32_t event_id, void *event_data) {
     ESP_LOGD(WIFI_STATION_TAG, "Event dispatched from event loop base=%s, event_id=%" PRIi32, base, event_id);
     esp_mqtt_event_handle_t event = event_data;
     esp_mqtt_client_handle_t client = event->client;
     switch ((esp_mqtt_event_id_t)event_id) {
     case MQTT_EVENT_CONNECTED:
+        isMQTTConnected = true;
         esp_mqtt_client_subscribe(client, SUB_TOPIC, 0);    // Remove this line if theres no topic to subscribe to.
         ESP_LOGI(WIFI_STATION_TAG, "MQTT_EVENT_CONNECTED");
         break;
 
     case MQTT_EVENT_DISCONNECTED:
+        isMQTTConnected = false;
         ESP_LOGI(WIFI_STATION_TAG, "MQTT_EVENT_DISCONNECTED");
         break;
 
@@ -65,11 +66,8 @@ static void mqtt_event_handler(void *handler_args, esp_event_base_t base, int32_
     }
 }
 
-/**
- * @brief Initialize and start the MQTT client.
- */
-void mqtt_app_start(void)
-{
+
+void mqtt_app_start(void) {
     // Configure MQTT client. Remember to point to the appropriate certs.
     const esp_mqtt_client_config_t mqtt_cfg = {
         .broker = {
