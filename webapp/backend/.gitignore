@@ -1,5 +1,5 @@
 # Taken from https://github.com/github/gitignore/blob/main/Node.gitignore
-node_modules
+node_modules/
 
 # Logs
 logs
