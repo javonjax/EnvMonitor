@@ -16,11 +16,10 @@ extern bool isMQTTConnected;
 static void mqtt_event_handler(void *handler_args, esp_event_base_t base, int32_t event_id, void *event_data) {
     ESP_LOGD(WIFI_STATION_TAG, "Event dispatched from event loop base=%s, event_id=%" PRIi32, base, event_id);
     esp_mqtt_event_handle_t event = event_data;
-    esp_mqtt_client_handle_t client = event->client;
     switch ((esp_mqtt_event_id_t)event_id) {
     case MQTT_EVENT_CONNECTED:
         isMQTTConnected = true;
-        esp_mqtt_client_subscribe(client, SUB_TOPIC, 0);    // Remove this line if theres no topic to subscribe to.
+        // esp_mqtt_client_subscribe(client, SUB_TOPIC, 0);    // Remove this line if theres no topic to subscribe to.
         ESP_LOGI(WIFI_STATION_TAG, "MQTT_EVENT_CONNECTED");
         break;
 
