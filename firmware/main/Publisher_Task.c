@@ -36,8 +36,8 @@ void vPublisher_Task(void *pvParameters) {
             cJSON *root = cJSON_CreateObject();
             cJSON_AddNumberToObject(root, "temperature", temp);
             cJSON_AddNumberToObject(root, "humidity", humidity);
-            cJSON_AddStringToObject(root, "motion detection", motionDetectionStatus);
-            cJSON_AddStringToObject(root, "water level", waterLevel);
+            cJSON_AddStringToObject(root, "motionDetection", motionDetectionStatus);
+            cJSON_AddStringToObject(root, "waterLevel", waterLevel);
             char *json_str = cJSON_PrintUnformatted(root);
             if (isMQTTConnected) {
                 int msg_id = esp_mqtt_client_publish(mqtt_client, PUB_TOPIC, json_str, 0, 0, 0);
