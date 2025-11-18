@@ -6,6 +6,7 @@ import { WebSocketServer, type Server } from 'ws';
 import fs from 'fs';
 import dotenv from 'dotenv';
 import { EnvMonitorDataSchema, type EnvMonitorData } from './types';
+import dataRoutes from './dataRoutes/dataRoutes';
 
 dotenv.config();
 
@@ -24,9 +25,9 @@ const mqttClient: mqtt.MqttClient = mqtt.connect({
 });
 
 // Middleware
-
 app.use(express.json());
 app.use(cors());
+app.use(dataRoutes);
 
 // MQTT handlers
 mqttClient.on('connect', () => {

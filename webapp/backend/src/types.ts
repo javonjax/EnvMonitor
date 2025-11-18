@@ -5,6 +5,7 @@ export const EnvMonitorDataSchema = z.object({
   humidity: z.number(),
   motionDetection: z.string(),
   waterLevel: z.string(),
+  timestamp: z.number(),
 });
 
 export type EnvMonitorData = z.infer<typeof EnvMonitorDataSchema>;
