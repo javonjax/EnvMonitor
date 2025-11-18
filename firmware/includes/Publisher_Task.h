@@ -5,6 +5,8 @@
 #include "mqtt.h"
 #include "cJSON.h"
 #include <string.h>
+#include <time.h>
+#include <sys/time.h>
 
 /**
  * @brief Receives data messages from the queue and combines them into a single

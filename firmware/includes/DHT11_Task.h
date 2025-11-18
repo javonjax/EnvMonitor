@@ -6,17 +6,18 @@
 #include "cJSON.h"
 
 // Base DHT11 task params struct.
-typedef struct {
-    DHT11_t *DHT11;
-    uint8_t *temperature;
-    uint8_t *humidity;
-    gpio_num_t led_pin;
+typedef struct
+{
+  DHT11_t *DHT11;
+  uint8_t *temperature;
+  uint8_t *humidity;
+  mqtt_client_t *mqtt_client_node;
 } DHT11_TaskParams_t;
 
 /**
  * @brief Reads temperature and humidity from DHT11 and publishes it to the
  *        appropriate MQTT topic.
- * 
+ *
  * @param pvParameters DHT11_TaskParams_t task params.
  *
  */

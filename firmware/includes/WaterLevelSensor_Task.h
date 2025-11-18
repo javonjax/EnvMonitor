@@ -4,10 +4,14 @@
 
 #pragma once
 
-#include "esp_adc/adc_oneshot.h"
 #include <mqtt.h>
+#include "WaterLevelSensor.h"
 
-// Configure pin number here.
-#define WATER_LEVEL_SENSOR_CHANNEL ADC_CHANNEL_4         // PIN 5
+// Base water level sensor task params struct.
+typedef struct
+{
+  water_level_sensor_t *water_level_sensor;
+  mqtt_client_t *mqtt_client_node;
+} WaterLevelSensor_TaskParams_t;
 
 void vWaterLevelSensor_Task(void *pvParameters);
