@@ -1,0 +1,59 @@
+import { useState, useEffect } from 'react';
+import type { EnvMonitorData } from '../../../backend/src/types';
+import DHT11Content from './DHT11/DHT11Content';
+import WeatherForecastContent from './WeatherForecast/WeatherForecastContent';
+import WeatherHistoryContent from './WeatherHistory/WeatherHistoryContent';
+import GeneralDiagnosticsContent from './GeneralDiagnostics/GeneralDiagnosticsContent';
+
+const BACKEND_DATA_LATEST_URL: string = import.meta.env.VITE_BACKEND_DATA_LATEST_URL as string;
+const BACKEND_WEBSOCKET_URL: string = import.meta.env.VITE_BACKEND_WEBSOCKET_URL as string;
+
+const MainPage = () => {
+  const [websocketData, setWebSocketData] = useState<EnvMonitorData>();
+
+  // Get the latest values from the DB then wait for websocket updates.
+  useEffect(() => {
+    const fetchInitialData = async (): Promise<void> => {
+      const url: string = `${BACKEND_DATA_LATEST_URL}1`;
+      const res: globalThis.Response = await fetch(url);
+      const data = await res.json();
+      console.log(data);
+      setWebSocketData(data);
+      return;
+    };
+    fetchInitialData();
+  }, []);
+
+  // WebSocket setup.
+  useEffect(() => {
+    const ws = new WebSocket(BACKEND_WEBSOCKET_URL);
+    ws.onopen = () => console.log('WebSocket connected');
+    ws.onerror = (err) => console.error('WebSocket error:', err);
+    ws.onclose = () => console.log('WebSocket closed');
+    ws.onmessage = (event) => {
+      const messageData: EnvMonitorData = JSON.parse(event.data);
+      setWebSocketData(messageData);
+    };
+
+    return () => ws.close();
+  }, []);
+
+  return (
+    <div className="flex grow justify-center border-2 border-blue-500">
+      <div className="grid w-full max-w-7xl grow grid-cols-6 grid-rows-6 border-2 border-black">
+        {/* Temp and humidity */}
+        <DHT11Content humidity={websocketData?.humidity} temperature={websocketData?.temperature} />
+        <WeatherHistoryContent />
+        <WeatherForecastContent />
+        <GeneralDiagnosticsContent
+          waterLevel={websocketData?.waterLevel}
+          lastFeedTime={websocketData?.lastFeedTime}
+          motionDetection={websocketData?.motionDetection}
+          lastMessageTime={websocketData?.timestamp}
+        />
+      </div>
+    </div>
+  );
+};
+
+export default MainPage;
