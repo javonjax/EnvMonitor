@@ -6,6 +6,7 @@ sdkconfig.old
 .clangd
 Kconfig.projbuild
 main/certs/
+components/
 managed_components/
 dependencies.lock
 idf_component.yml

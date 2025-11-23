@@ -1,4 +1,4 @@
-import express, { type Express, type Request, type Response } from 'express';
+import express, { application, type Express, type Request, type Response } from 'express';
 import cors from 'cors';
 import mqtt from 'mqtt';
 import http from 'http';
@@ -12,6 +12,9 @@ dotenv.config();
 
 const app: Express = express();
 const port: number = 3000;
+const lat: string = process.env.STATION_LATITUDE as string;
+const lon: string = process.env.STATION_LONGITUDE as string;
+const OPEN_WEATHER_MAP_API_KEY: string = process.env.OPEN_WEATHER_MAP_API_KEY as string;
 
 const wss: Server = new WebSocketServer({ noServer: true });
 const mqttClient: mqtt.MqttClient = mqtt.connect({
@@ -66,6 +69,16 @@ wss.on('connection', () => console.log('Client connected to WS'));
 // Routes
 app.get('/', (req: Request, res: Response) => {
   res.send('Hello, TypeScript with Express!');
+});
+
+app.get('/test', async (req: Request, res: Response) => {
+  let url: string = process.env.OPEN_WEATHER_MAP_ONECALL_URL as string;
+  url += `?&units=metric&lat=${lat}&lon=${lon}&appid=${OPEN_WEATHER_MAP_API_KEY}`;
+  const responseData: globalThis.Response = await fetch(url);
+
+  const data = await responseData.json();
+  console.log(data);
+  res.status(200).json(data);
 });
 
 // Start Server

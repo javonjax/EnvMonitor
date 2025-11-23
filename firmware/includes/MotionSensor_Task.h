@@ -11,18 +11,22 @@
 #include "esp_log.h"
 #include "mqtt.h"
 #include <string.h>
+#include "MotionSensor.h"
 
 #define GPIO_LOW 0
 #define GPIO_HIGH 1
 
-// Configure pin numbers here.
-#define MOTION_SENSOR_PIN GPIO_NUM_18
-#define MOTION_SENSOR_LED_PIN GPIO_NUM_17
-#define MOTION_SENSOR_BUTTON_PIN GPIO_NUM_16
+// Base motion sensor task params struct.
+typedef struct
+{
+  motion_sensor_t *motion_sensor;
+  mqtt_client_t *mqtt_client_node;
+} MotionSensor_TaskParams_t;
 
 /**
- * @brief Enables motion activated lighting and publishes the current motion activation
- *        setting.
- * 
+ * @brief Controls and monitors the motion activated lights and sends
+ *        data messages to the MQTT data queue.
+ *
+ * @param pvParameters MotionSensor_TaskParams_t task params.
  */
 void vMotionSensor_Task(void *pvParameters);
