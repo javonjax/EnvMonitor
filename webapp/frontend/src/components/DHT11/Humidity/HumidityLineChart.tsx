@@ -1,7 +1,17 @@
-import React from 'react';
+import type { EnvMonitorData } from '../../../../../backend/src/types';
 
-const HumidityLineChart = () => {
-  return <div className="h-[200px] w-full border-2 border-blue-500">line chart</div>;
+export interface HumidityLineChartProps {
+  lineChartData: EnvMonitorData[];
+}
+const HumidityLineChart = ({ lineChartData }: HumidityLineChartProps) => {
+  return (
+    <div className="h-[200px] w-full border-2 border-blue-500">
+      {/* {' '}
+      {lineChartData.map((item) => (
+        <p>{item.humidity}</p>
+      ))}{' '} */}
+    </div>
+  );
 };
 
 export default HumidityLineChart;
