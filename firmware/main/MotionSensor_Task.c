@@ -19,6 +19,11 @@ void vMotionSensor_Task(void *pvParameters)
   while (1)
   {
     counter++;
+    if (counter % 20 == 0)
+    {
+      UBaseType_t remaining = uxTaskGetStackHighWaterMark(NULL);
+      ESP_LOGI("Motion sensor", "Stack left: %u words", remaining);
+    }
     uint8_t button_status = gpio_get_level(button_pin);
     if (button_status == GPIO_HIGH)
     {

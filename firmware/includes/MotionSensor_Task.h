@@ -24,8 +24,9 @@ typedef struct
 } MotionSensor_TaskParams_t;
 
 /**
- * @brief Enables motion activated lighting and publishes the current motion activation
- *        setting.
+ * @brief Controls and monitors the motion activated lights and sends
+ *        data messages to the MQTT data queue.
  *
+ * @param pvParameters MotionSensor_TaskParams_t task params.
  */
 void vMotionSensor_Task(void *pvParameters);

@@ -5,6 +5,7 @@ export const EnvMonitorDataSchema = z.object({
   humidity: z.number(),
   motionDetection: z.string(),
   waterLevel: z.string(),
+  lastFeedTime: z.number(),
   timestamp: z.number(),
 });
 

@@ -15,8 +15,8 @@ typedef struct
 } DHT11_TaskParams_t;
 
 /**
- * @brief Reads temperature and humidity from DHT11 and publishes it to the
- *        appropriate MQTT topic.
+ * @brief Reads temperature and humidity from DHT11 and sends it to the
+ *        MQTT data queue.
  *
  * @param pvParameters DHT11_TaskParams_t task params.
  *

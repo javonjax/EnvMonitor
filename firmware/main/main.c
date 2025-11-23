@@ -4,12 +4,14 @@
 #include "DHT11.h"
 #include "MotionSensor.h"
 #include "WaterLevelSensor.h"
+#include "ServoFeeder.h"
 #include "cJSON.h"
 #include "DHT11_Task.h"
 #include "MotionSensor_Task.h"
 #include "WaterLevelSensor_Task.h"
+#include "ServoFeeder_Task.h"
 #include "Publisher_Task.h"
-#include "esp_sntp.h"
+#include <esp_sntp.h>
 #include <esp_netif_sntp.h>
 
 #define CLIENT_ID_NODE_1 CONFIG_AWS_IOT_CORE_CLIENT_ID
@@ -22,10 +24,6 @@ QueueHandle_t data_queue;
 
 void app_main(void)
 {
-  // Initialize SNTP
-  esp_sntp_config_t config = ESP_NETIF_SNTP_DEFAULT_CONFIG("pool.ntp.org");
-  esp_netif_sntp_init(&config);
-
   // Initialize NVS
   esp_err_t ret = nvs_flash_init();
   if (ret == ESP_ERR_NVS_NO_FREE_PAGES || ret == ESP_ERR_NVS_NEW_VERSION_FOUND)
@@ -57,6 +55,14 @@ void app_main(void)
   {
     mqtt_client_Node1.client_id = CLIENT_ID_NODE_1;
     mqtt_app_start(&mqtt_client_Node1);
+  }
+
+  // Initialize SNTP
+  esp_sntp_config_t config = ESP_NETIF_SNTP_DEFAULT_CONFIG("pool.ntp.org");
+  esp_netif_sntp_init(&config);
+  while (esp_netif_sntp_sync_wait(pdMS_TO_TICKS(10000)))
+  {
+    printf("MAIN: Failed to update system time.\n");
   }
 
   // Initialize necessary components.
@@ -92,13 +98,22 @@ void app_main(void)
       .mqtt_client_node = &mqtt_client_Node1};
   /* Water level sensor end */
 
+  /* Servo feeder start */
+  static servo_feeder_t servo_feeder;
+  servo_feeder = ServoFeeder_Create(SERVO_FEEDER_PIN, SERVO_FEEDER_CHANNEL);
+  static ServoFeeder_TaskParams_t ServoFeeder_TaskParams = {
+      .servo_feeder = &servo_feeder,
+      .mqtt_client_node = &mqtt_client_Node1};
+  /* Servo feeder end */
+
   // Create queue for device messages.
   data_queue = xQueueCreate(10, sizeof(data_queue_msg_t));
 
   // Create tasks.
   printf("Creating %s tasks\n", mqtt_client_Node1.client_id);
   xTaskCreate(vPublisher_Task, "MQTT Publisher", 4096, &mqtt_client_Node1, 3, NULL);
-  xTaskCreate(vDHT11_Task, "DHT11", 4096, &DHT11_TaskParams, 1, NULL);
-  xTaskCreate(vMotionSensor_Task, "Motion activated lights", 4096, &MotionSensor_TaskParams, 1, NULL);
-  xTaskCreate(vWaterLevelSensor_Task, "Water level sensor", 4096, &WaterLevelSensor_TaskParams, 1, NULL);
+  xTaskCreate(vDHT11_Task, "DHT11", 2048, &DHT11_TaskParams, 1, NULL);
+  xTaskCreate(vMotionSensor_Task, "Motion activated lights", 2400, &MotionSensor_TaskParams, 1, NULL);
+  xTaskCreate(vWaterLevelSensor_Task, "Water level sensor", 2048, &WaterLevelSensor_TaskParams, 1, NULL);
+  xTaskCreate(vServoFeeder_Task, "Servo feeder task", 2400, &ServoFeeder_TaskParams, 1, NULL);
 }

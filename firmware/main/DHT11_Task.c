@@ -9,11 +9,12 @@ void vDHT11_Task(void *pvParameters)
   data_queue_msg_t msg = {.source = DHT11};
   while (1)
   {
+    UBaseType_t remaining = uxTaskGetStackHighWaterMark(NULL);
+    ESP_LOGI("DHT11", "Stack left: %u words", remaining);
     if (DHT11_ReadTemperatureAndHumidity(
             params->DHT11, params->temperature, params->humidity) == DHT_OK)
     {
       gpio_set_level(params->DHT11->led_pin_num, 1);
-      vTaskDelay(pdMS_TO_TICKS(200));
       gpio_set_level(params->DHT11->led_pin_num, 0);
 
       msg.msg_data.DHT11_Data.temp = *params->temperature;

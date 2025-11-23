@@ -28,7 +28,8 @@ typedef enum
 {
   DHT11,
   MOTION_SENSOR,
-  WATER_LEVEL_SENSOR
+  WATER_LEVEL_SENSOR,
+  SERVO_FEEDER
 } msg_source_t;
 
 /**
@@ -48,6 +49,8 @@ typedef struct
     char *water_level;
 
     char *motion_detection_status;
+
+    uint64_t last_feed_timestamp;
   } msg_data;
 } data_queue_msg_t;
 
@@ -66,5 +69,7 @@ extern const uint8_t private_pem_key_end[] asm("_binary_private_pem_key_end");
 
 /**
  * @brief Initialize and start the MQTT client.
+ *
+ * @param mqtt_client pointer to an mqtt client.
  */
 void mqtt_app_start(mqtt_client_t *mqtt_client);

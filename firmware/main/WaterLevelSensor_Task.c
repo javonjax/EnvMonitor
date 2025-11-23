@@ -1,6 +1,4 @@
 #include "WaterLevelSensor_Task.h"
-#include "freertos/FreeRTOS.h"
-#include "freertos/task.h"
 
 extern adc_oneshot_unit_handle_t adc1_handle;
 extern adc_cali_handle_t adc_cali_handle;
@@ -15,6 +13,8 @@ void vWaterLevelSensor_Task(void *pvParameters)
   data_queue_msg_t msg = {.source = WATER_LEVEL_SENSOR};
   while (1)
   {
+    UBaseType_t remaining = uxTaskGetStackHighWaterMark(NULL);
+    ESP_LOGI("Water Level Sensor", "Stack left: %u words", remaining);
     adc_oneshot_read(adc1_handle, sensor_channel, &adc_raw);
     adc_cali_raw_to_voltage(adc_cali_handle, adc_raw, &voltage);
     if (adc_raw > 750)

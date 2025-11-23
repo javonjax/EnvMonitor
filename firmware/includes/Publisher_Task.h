@@ -10,6 +10,8 @@
 
 /**
  * @brief Receives data messages from the queue and combines them into a single
- *        MQTT message. 
+ *        MQTT message.
+ *
+ * @param pvParameters Pointer an MQTT client node.
  */
 void vPublisher_Task(void *pvParameters);

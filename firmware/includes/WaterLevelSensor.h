@@ -15,4 +15,13 @@ typedef struct
   adc_channel_t sensor_channel_num;
 } water_level_sensor_t;
 
-water_level_sensor_t WaterLevelSensor_Create(adc_unit_t adc_unit, adc_channel_t sensor_channel, adc_oneshot_unit_handle_t *adc1_handle);
+/**
+ * @brief Create a new water level sensor struct.
+ *
+ * @param adc_unit ADC unit.
+ * @param sensor_channel ADC channel.
+ * @param adc_handle ADC oneshot handle.
+ *
+ * @return water level sensor struct.
+ */
+water_level_sensor_t WaterLevelSensor_Create(adc_unit_t adc_unit, adc_channel_t sensor_channel, adc_oneshot_unit_handle_t *adc_handle);
