@@ -34,7 +34,7 @@ router.get('/weather/current', async (req: Request, res: Response) => {
     }
 
     const currentWeatherAPIRes: CurrentWeatherAPIResponse = parsedJson.data;
-    currentWeatherAPIRes.current.dt *= 1000; // NOTE: The Open Weather Map API provides datetime data in seconds.
+    currentWeatherAPIRes.dt *= 1000; // NOTE: The Open Weather Map API provides datetime data in seconds.
     res.status(200).json(currentWeatherAPIRes);
   } catch (error) {
     if (error instanceof Error) {
@@ -58,7 +58,7 @@ router.get('/weather/forecast', async (req: Request, res: Response) => {
     const forecastAPIRes: DailyForecasetAPIResponse = parsedJson.data;
 
     // NOTE: The Open Weather Map API provides datetime data in seconds.
-    for (const item of forecastAPIRes.daily) {
+    for (const item of forecastAPIRes) {
       item.dt = item.dt * 1000;
     }
     res.status(200).json(forecastAPIRes);

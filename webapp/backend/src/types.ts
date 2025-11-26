@@ -37,7 +37,12 @@ export const CurrentWeatherAPIResponseSchema = z
   })
   .strip()
   .transform((data) => ({
-    current: data.current,
+    dt: data.current.dt,
+    feelsLike: data.current.feels_like,
+    temp: data.current.temp,
+    humidity: data.current.humidity,
+    weatherDescription: data.current.weather[0]?.description,
+    weatherIcon: data.current.weather[0]?.icon,
     weatherOverview: data.weather_overview,
   }));
 
@@ -62,6 +67,7 @@ export const DailyForecastAPIResponseSchema = z
   .object({
     daily: z.array(DailyForecastDataSchema),
   })
-  .strip();
+  .strip()
+  .transform((data) => data.daily);
 
 export type DailyForecasetAPIResponse = z.infer<typeof DailyForecastAPIResponseSchema>;
