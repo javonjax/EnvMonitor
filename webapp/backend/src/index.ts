@@ -6,7 +6,8 @@ import { WebSocketServer, type Server } from 'ws';
 import fs from 'fs';
 import dotenv from 'dotenv';
 import { EnvMonitorDataSchema, type EnvMonitorData } from './types';
-import dataRoutes from './dataRoutes/dataRoutes';
+import dynamoDataRoutes from './dynamoDataRoutes/dynamoDataRoutes';
+import weatherRoutes from './weatherRoutes/weatherRoutes';
 
 dotenv.config();
 
@@ -30,7 +31,8 @@ const mqttClient: mqtt.MqttClient = mqtt.connect({
 // Middleware
 app.use(express.json());
 app.use(cors());
-app.use(dataRoutes);
+app.use(dynamoDataRoutes);
+app.use(weatherRoutes);
 
 // MQTT handlers
 mqttClient.on('connect', () => {
@@ -38,16 +40,16 @@ mqttClient.on('connect', () => {
     if (err) {
       console.error(err.message);
     } else {
-      console.log('Subscribed to topic');
+      console.log('Subscribed to topic.');
     }
   });
-  console.log('MQTT connected');
+  console.log('MQTT connected.');
 });
 
 mqttClient.on('message', (topic, message) => {
   if (topic === (process.env.ENV_MONITOR_DATA_TOPIC as string)) {
     try {
-      const payload = JSON.parse(message.toString());
+      const payload: unknown = JSON.parse(message.toString());
       const parsedData = EnvMonitorDataSchema.safeParse(payload);
       if (!parsedData.success) {
         throw new Error('MQTT message does not fit the desired schema.');
@@ -64,21 +66,11 @@ mqttClient.on('message', (topic, message) => {
   }
 });
 
-wss.on('connection', () => console.log('Client connected to WS'));
+wss.on('connection', () => console.log('Client connected to websocket.'));
 
 // Routes
 app.get('/', (req: Request, res: Response) => {
   res.send('Hello, TypeScript with Express!');
-});
-
-app.get('/test', async (req: Request, res: Response) => {
-  let url: string = process.env.OPEN_WEATHER_MAP_ONECALL_URL as string;
-  url += `?&units=metric&lat=${lat}&lon=${lon}&appid=${OPEN_WEATHER_MAP_API_KEY}`;
-  const responseData: globalThis.Response = await fetch(url);
-
-  const data = await responseData.json();
-  console.log(data);
-  res.status(200).json(data);
 });
 
 // Start Server
