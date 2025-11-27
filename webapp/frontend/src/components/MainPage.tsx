@@ -40,17 +40,21 @@ const MainPage = () => {
 
   return (
     <div className="bg-background flex grow justify-center">
-      <div className="border-accent grid w-full max-w-7xl grow grid-cols-6 grid-rows-6 border-2">
+      <div className="border-accent grid w-full grow grid-cols-6 grid-rows-6 border-2">
         {/* Temp and humidity */}
-        <DHT11Content humidity={websocketData?.humidity} temperature={websocketData?.temperature} />
-        <CurrentWeatherContent />
-        <WeatherForecastContent />
+        <div className="col-span-full row-span-2 flex flex-col items-center border-2 border-red-500 lg:col-span-3">
+          hey
+        </div>
         <GeneralDiagnosticsContent
           waterLevel={websocketData?.waterLevel}
           lastFeedTime={websocketData?.lastFeedTime}
           motionDetection={websocketData?.motionDetection}
           lastMessageTime={websocketData?.timestamp}
         />
+
+        <CurrentWeatherContent />
+        <DHT11Content humidity={websocketData?.humidity} temperature={websocketData?.temperature} />
+        <WeatherForecastContent />
       </div>
     </div>
   );
