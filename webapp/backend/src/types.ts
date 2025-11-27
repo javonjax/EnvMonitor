@@ -6,10 +6,15 @@ export const EnvMonitorDataSchema = z.object({
   motionDetection: z.string(),
   waterLevel: z.string(),
   lastFeedTime: z.number(),
+  lastMotionDetectedTime: z.number(),
   timestamp: z.number(),
 });
 
 export type EnvMonitorData = z.infer<typeof EnvMonitorDataSchema>;
+
+export const EnvMonitorDataArraySchema = z.array(EnvMonitorDataSchema);
+
+export type EnvMonitorDataArray = z.infer<typeof EnvMonitorDataArraySchema>;
 
 export const WeatherDescriptionSchema = z
   .object({

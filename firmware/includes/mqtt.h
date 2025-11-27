@@ -38,19 +38,19 @@ typedef enum
 typedef struct
 {
   msg_source_t source;
-  union
+  struct
   {
-    struct
-    {
-      uint8_t temp;
-      uint8_t humidity;
-    } DHT11_Data;
 
-    char *water_level;
+    uint8_t temp;
+    uint8_t humidity;
 
-    char *motion_detection_status;
+    char water_level[16];
+
+    char motion_detection_status[16];
 
     uint64_t last_feed_timestamp;
+
+    uint64_t last_motion_detected_time;
   } msg_data;
 } data_queue_msg_t;
 

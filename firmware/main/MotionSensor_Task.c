@@ -13,6 +13,7 @@ void vMotionSensor_Task(void *pvParameters)
   uint8_t last_button_status = 1;
   uint8_t use_motion_detection = 1;
   int counter = 0;
+  uint64_t last_motion_detected_time = 0;
   data_queue_msg_t msg = {
       .source = MOTION_SENSOR};
 
@@ -49,16 +50,20 @@ void vMotionSensor_Task(void *pvParameters)
       if (motion_detected)
       {
         gpio_set_level(led_pin, GPIO_HIGH);
+        struct timeval tv;
+        gettimeofday(&tv, NULL);
+        last_motion_detected_time = (uint64_t)(tv.tv_sec * 1000) + (tv.tv_usec / 1000);
       }
       else
       {
-        gpio_set_level(sensor_pin, GPIO_LOW);
+        gpio_set_level(led_pin, GPIO_LOW);
       }
     }
 
     if (counter == 80)
     {
-      msg.msg_data.motion_detection_status = use_motion_detection ? "Enabled" : "Disabled";
+      strcpy(msg.msg_data.motion_detection_status, use_motion_detection ? "Enabled" : "Disabled");
+      msg.msg_data.last_motion_detected_time = last_motion_detected_time;
       if (client->is_connected)
       {
         xQueueSend(data_queue, &msg, portMAX_DELAY);
