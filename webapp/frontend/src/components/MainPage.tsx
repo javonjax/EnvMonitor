@@ -40,7 +40,7 @@ const MainPage = () => {
 
   return (
     <div className="bg-background flex grow justify-center">
-      <div className="grid w-full max-w-7xl grow grid-cols-6 grid-rows-6 border-2 border-black">
+      <div className="border-accent grid w-full max-w-7xl grow grid-cols-6 grid-rows-6 border-2">
         {/* Temp and humidity */}
         <DHT11Content humidity={websocketData?.humidity} temperature={websocketData?.temperature} />
         <CurrentWeatherContent />
