@@ -1,4 +1,4 @@
-import type { EnvMonitorData } from '../../../../../backend/src/types';
+import type { EnvMonitorData } from '@backend/types';
 
 export interface TemperatureLineChartProps {
   lineChartData: EnvMonitorData[];

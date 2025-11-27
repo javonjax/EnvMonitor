@@ -1,4 +1,4 @@
-import type { EnvMonitorData } from '../../../../../backend/src/types';
+import type { EnvMonitorData } from '@backend/types';
 import TemperatureCurrentValue from './TemperatureCurrentValue';
 import TemperatureLineChart from './TemperatureLineChart';
 
