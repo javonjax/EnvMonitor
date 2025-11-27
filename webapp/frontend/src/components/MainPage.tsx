@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import type { EnvMonitorData } from '../../../backend/src/types';
 import DHT11Content from './DHT11/DHT11Content';
 import WeatherForecastContent from './WeatherForecast/WeatherForecastContent';
-import WeatherHistoryContent from './WeatherHistory/WeatherHistoryContent';
+import CurrentWeatherContent from './CurrentWeather/CurrentWeatherContent';
 import GeneralDiagnosticsContent from './GeneralDiagnostics/GeneralDiagnosticsContent';
 
 const BACKEND_DATA_LATEST_URL: string = import.meta.env.VITE_BACKEND_DATA_LATEST_URL as string;
@@ -39,11 +39,11 @@ const MainPage = () => {
   }, []);
 
   return (
-    <div className="flex grow justify-center border-2 border-blue-500">
+    <div className="bg-background flex grow justify-center">
       <div className="grid w-full max-w-7xl grow grid-cols-6 grid-rows-6 border-2 border-black">
         {/* Temp and humidity */}
         <DHT11Content humidity={websocketData?.humidity} temperature={websocketData?.temperature} />
-        <WeatherHistoryContent />
+        <CurrentWeatherContent />
         <WeatherForecastContent />
         <GeneralDiagnosticsContent
           waterLevel={websocketData?.waterLevel}

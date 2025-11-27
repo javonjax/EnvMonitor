@@ -20,6 +20,8 @@ const GeneralDiagnosticsContent = ({
   const [currentDateTime, setCurrentDateTime] = useState<Date>(new Date());
 
   useEffect(() => {
+    setCurrentDateTime(new Date());
+
     const interval = setInterval(() => {
       setCurrentDateTime(new Date());
     }, 1000);
