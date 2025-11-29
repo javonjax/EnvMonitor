@@ -43,8 +43,8 @@ export const CurrentWeatherAPIResponseSchema = z
   .strip()
   .transform((data) => ({
     dt: data.current.dt,
-    feelsLike: data.current.feels_like,
-    temp: data.current.temp,
+    feelsLike: Math.round(data.current.feels_like),
+    temp: Math.round(data.current.temp),
     humidity: data.current.humidity,
     weatherDescription: data.current.weather[0]?.description,
     weatherIcon: data.current.weather[0]?.icon,
@@ -53,24 +53,35 @@ export const CurrentWeatherAPIResponseSchema = z
 
 export type CurrentWeatherAPIResponse = z.infer<typeof CurrentWeatherAPIResponseSchema>;
 
-export const DailyForecastDataSchema = z
+export const DailyForecastDaySchema = z
   .object({
     dt: z.number(),
     summary: z.string(),
     temp: z.object({
+      day: z.number(),
       min: z.number(),
       max: z.number(),
     }),
     humidity: z.number(),
     weather: z.array(WeatherDescriptionSchema),
   })
-  .strip();
+  .strip()
+  .transform((data) => ({
+    dt: data.dt,
+    summary: data.summary,
+    temp: Math.round(data.temp.day),
+    tempMin: Math.round(data.temp.min),
+    tempMax: Math.round(data.temp.max),
+    humidity: data.humidity,
+    weatherDescription: data.weather[0]?.description,
+    weatherIcon: data.weather[0]?.icon,
+  }));
 
-export type DailyForecastData = z.infer<typeof DailyForecastDataSchema>;
+export type DailyForecastDay = z.infer<typeof DailyForecastDaySchema>;
 
 export const DailyForecastAPIResponseSchema = z
   .object({
-    daily: z.array(DailyForecastDataSchema),
+    daily: z.array(DailyForecastDaySchema),
   })
   .strip()
   .transform((data) => data.daily);
