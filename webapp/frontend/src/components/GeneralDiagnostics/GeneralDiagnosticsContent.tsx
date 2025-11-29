@@ -17,18 +17,6 @@ const GeneralDiagnosticsContent = ({
   motionDetection,
   lastMessageTime,
 }: GeneralDiagnosticsContentProps) => {
-  const [currentDateTime, setCurrentDateTime] = useState<Date>(new Date());
-
-  useEffect(() => {
-    setCurrentDateTime(new Date());
-
-    const interval = setInterval(() => {
-      setCurrentDateTime(new Date());
-    }, 1000);
-
-    return () => clearInterval(interval);
-  }, []);
-
   return (
     <div className="col-span-full row-span-2 flex min-h-[400px] flex-col items-center justify-evenly border-2 border-purple-500 lg:col-span-3 lg:min-h-0">
       <div className="flex h-full w-full flex-wrap items-center justify-evenly gap-4 border-2 border-blue-500 p-4">
@@ -37,7 +25,6 @@ const GeneralDiagnosticsContent = ({
         <MotionDetection motionDetection={motionDetection} />
       </div>
       <p>Last Update: {new Date(Number(lastMessageTime)).toLocaleString()}</p>
-      <p>Local Time: {currentDateTime.toLocaleString()}</p>
     </div>
   );
 };
