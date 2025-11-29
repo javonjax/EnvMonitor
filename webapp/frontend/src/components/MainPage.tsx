@@ -4,12 +4,24 @@ import DHT11Content from './DHT11/DHT11Content';
 import WeatherForecastContent from './WeatherForecast/WeatherForecastContent';
 import CurrentWeatherContent from './CurrentWeather/CurrentWeatherContent';
 import GeneralDiagnosticsContent from './GeneralDiagnostics/GeneralDiagnosticsContent';
+import CurrentDateTimeContent from './CurrentDateTime/CurrentDateTimeContent';
 
 const BACKEND_DATA_LATEST_URL: string = import.meta.env.VITE_BACKEND_DATA_LATEST_URL as string;
 const BACKEND_WEBSOCKET_URL: string = import.meta.env.VITE_BACKEND_WEBSOCKET_URL as string;
 
 const MainPage = () => {
   const [websocketData, setWebSocketData] = useState<EnvMonitorData>();
+  const [currentDateTime, setCurrentDateTime] = useState<Date>(new Date());
+
+  useEffect(() => {
+    setCurrentDateTime(new Date());
+
+    const interval = setInterval(() => {
+      setCurrentDateTime(new Date());
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, []);
 
   // Get the latest values from the DB then wait for websocket updates.
   useEffect(() => {
@@ -39,21 +51,20 @@ const MainPage = () => {
 
   return (
     <div className="bg-background flex grow justify-center">
-      <div className="border-accent grid w-full grow grid-cols-6 grid-rows-6 border-2">
+      <div className="grid grow grid-flow-col grid-cols-6 grid-rows-6">
         {/* Temp and humidity */}
-        <div className="col-span-full row-span-2 flex flex-col items-center border-2 border-red-500 lg:col-span-3">
-          hey
-        </div>
+        <CurrentDateTimeContent currentDateTime={currentDateTime} />
+
+        <CurrentWeatherContent />
+
+        <WeatherForecastContent />
+        <DHT11Content humidity={websocketData?.humidity} temperature={websocketData?.temperature} />
         <GeneralDiagnosticsContent
           waterLevel={websocketData?.waterLevel}
           lastFeedTime={websocketData?.lastFeedTime}
           motionDetection={websocketData?.motionDetection}
           lastMessageTime={websocketData?.timestamp}
         />
-
-        <CurrentWeatherContent />
-        <DHT11Content humidity={websocketData?.humidity} temperature={websocketData?.temperature} />
-        <WeatherForecastContent />
       </div>
     </div>
   );

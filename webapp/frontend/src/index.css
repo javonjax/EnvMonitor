@@ -17,6 +17,7 @@ body {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-accent: var(--accent);
+  --color-test: var(--test);
   /* --color-card: var(--card);
   --color-card-foreground: var(--card-foreground);
   --color-popover: var(--popover);
@@ -49,9 +50,12 @@ body {
 }
 
 :root {
+  /* --background: oklch(0.3605 0.0774 157.57); */
   --background: oklch(0.17 0 0);
   --foreground: oklch(0.8 0 0);
-  --accent: oklch(0.77 0.0774 157.57);
+  --accent: oklch(0.4555 0.0774 157.57);
+  /* --accent: oklch(0.77 0.0774 157.57); */
+  --test: oklch(0.3605 0.0774 157.57);
   /* --card: oklch(1 0 0);
   --card-foreground: oklch(0.145 0 0);
   --popover: oklch(1 0 0);
