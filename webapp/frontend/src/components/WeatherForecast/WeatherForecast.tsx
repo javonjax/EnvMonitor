@@ -1,4 +1,5 @@
 import type { DailyForecasetAPIResponse } from '@backend/types';
+import WeatherForecastCard from './WeatherForecastCard';
 
 export interface WeatherForecastProps {
   weatherForecast: DailyForecasetAPIResponse | undefined;
@@ -6,10 +7,13 @@ export interface WeatherForecastProps {
 
 const WeatherForecast = ({ weatherForecast }: WeatherForecastProps) => {
   return (
-    <div className="flex h-full w-full flex-col items-center rounded-xl border-2 border-black p-4">
-      {weatherForecast?.map((item) => (
-        <p>{item.temp.max}</p>
-      ))}
+    <div className="bg-accent flex h-full w-full flex-col rounded-xl p-4">
+      <p className="w-full">Weather Forecast</p>
+      <div className="flex w-full grow items-center justify-evenly gap-x-4 overflow-x-auto">
+        {weatherForecast?.slice(1).map((forecastDay) => (
+          <WeatherForecastCard key={forecastDay.dt} forecastDay={forecastDay} />
+        ))}
+      </div>
     </div>
   );
 };

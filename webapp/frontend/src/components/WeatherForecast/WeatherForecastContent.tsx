@@ -31,7 +31,7 @@ const WeatherForecastContent = () => {
     return () => clearInterval(interval);
   }, []);
   return (
-    <div className="col-span-full row-span-2 flex min-h-[400px] flex-col items-center justify-evenly border-2 border-green-500 p-4 lg:col-span-3 lg:min-h-0">
+    <div className="col-span-full row-span-2 p-4 lg:col-span-3">
       <WeatherForecast weatherForecast={weatherForecast} />
     </div>
   );

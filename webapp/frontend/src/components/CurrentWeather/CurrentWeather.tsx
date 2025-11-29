@@ -1,3 +1,5 @@
+import { getForecastIcon } from '@/lib/utils';
+
 export interface CurrentWeatherProps {
   timestamp: number | undefined;
   feelsLike: number | undefined;
@@ -18,12 +20,13 @@ const CurrentWeather = ({
   weatherOverview,
 }: CurrentWeatherProps) => {
   return (
-    <div className="bg-accent flex h-full w-full flex-col gap-y-4 rounded-xl p-4">
-      <p className="w-full">Current weather</p>
+    <div className="bg-test flex h-full max-h-[250px] w-full flex-col gap-y-4 rounded-xl p-4">
+      <p className="w-full">Current Weather</p>
       <div className="flex h-full w-full grow flex-col">
-        <p>Temperature: {temp?.toFixed(2) + '°F'}</p>
-        <p>Feels like: {feelsLike?.toFixed(2) + '°F'}</p>
+        <p>Temperature: {temp + '°F'}</p>
+        <p>Feels like: {feelsLike + '°F'}</p>
         <p>Humidity: {humidity + '%'}</p>
+        {weatherDescription ? getForecastIcon(weatherDescription) : ''}
         {/* TODO: get better icons */}
         {/* <img
         src={`https://openweathermap.org/img/wn/${weatherIcon}@2x.png`}

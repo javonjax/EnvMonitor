@@ -50,8 +50,8 @@ body {
 }
 
 :root {
-  --background: oklch(0.3605 0.0774 157.57);
-  /* --background: oklch(0.17 0 0); */
+  /* --background: oklch(0.3605 0.0774 157.57); */
+  --background: oklch(0.17 0 0);
   --foreground: oklch(0.8 0 0);
   --accent: oklch(0.4555 0.0774 157.57);
   /* --accent: oklch(0.77 0.0774 157.57); */

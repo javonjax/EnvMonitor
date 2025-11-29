@@ -34,21 +34,23 @@ const CurrentWeatherContent = () => {
   }, []);
 
   return (
-    <div className="col-span-full row-span-2 flex min-h-[400px] flex-col items-center justify-evenly gap-y-4 p-4 lg:col-span-3 lg:min-h-0">
-      <div className="flex h-full w-full items-center justify-center gap-x-4">
-        <CurrentWeather
-          feelsLike={currentWeather?.feelsLike}
-          humidity={currentWeather?.humidity}
-          temp={currentWeather?.temp}
-          timestamp={currentWeather?.dt}
-          weatherDescription={currentWeather?.weatherDescription}
-          weatherIcon={currentWeather?.weatherIcon}
-          weatherOverview={currentWeather?.weatherOverview}
-        />
-        <CurrentWeatherOverview weatherOverview={currentWeather?.weatherOverview} />
-      </div>
+    <div className="col-span-full row-span-2 p-4 lg:col-span-3">
+      <div className="bg-accent flex h-full w-full flex-col items-center justify-center gap-y-4 rounded-xl p-4">
+        <div className="flex h-full w-full items-center justify-center gap-x-4">
+          <CurrentWeather
+            feelsLike={currentWeather?.feelsLike}
+            humidity={currentWeather?.humidity}
+            temp={currentWeather?.temp}
+            timestamp={currentWeather?.dt}
+            weatherDescription={currentWeather?.weatherDescription}
+            weatherIcon={currentWeather?.weatherIcon}
+            weatherOverview={currentWeather?.weatherOverview}
+          />
+          <CurrentWeatherOverview weatherOverview={currentWeather?.weatherOverview} />
+        </div>
 
-      <p>Last Update: {new Date(Number(currentWeather?.dt)).toLocaleString()}</p>
+        <p>Last Update: {new Date(Number(currentWeather?.dt)).toLocaleString()}</p>
+      </div>
     </div>
   );
 };

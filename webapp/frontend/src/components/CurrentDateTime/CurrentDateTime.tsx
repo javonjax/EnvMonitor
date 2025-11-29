@@ -7,7 +7,7 @@ export interface CurrentDateTimeProps {
 const CurrentDateTime = ({ currentDateTime }: CurrentDateTimeProps) => {
   return (
     <div className="bg-accent flex h-full w-full flex-col items-center justify-center rounded-xl">
-      <div className="text-8xl">
+      <div className="text-8xl font-semibold">
         {currentDateTime.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}
       </div>
       <div>Riverview, FL</div>

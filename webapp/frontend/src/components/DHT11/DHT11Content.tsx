@@ -34,9 +34,11 @@ const DHT11Content = ({ temperature, humidity }: DHT11ContentProps) => {
   }, []);
 
   return (
-    <div className="col-span-full row-span-4 flex flex-col items-center border-2 border-red-500 lg:col-span-3">
-      <TemperatureContent temperature={temperature} lineChartData={lineChartData} />
-      <HumidityContent humidity={humidity} lineChartData={lineChartData} />
+    <div className="col-span-full row-span-4 border-2 border-red-500 lg:col-span-3">
+      <div className="flex h-full w-full flex-col items-center">
+        <TemperatureContent temperature={temperature} lineChartData={lineChartData} />
+        <HumidityContent humidity={humidity} lineChartData={lineChartData} />
+      </div>
     </div>
   );
 };
