@@ -9,9 +9,12 @@ export interface HumidityContentProps {
 
 const HumidityContent = ({ humidity, lineChartData }: HumidityContentProps) => {
   return (
-    <div className="flex h-full w-full items-center gap-4 border-2 border-blue-500 p-4">
-      <HumidityCurrentValue humidity={humidity} />
-      <HumidityLineChart lineChartData={lineChartData} />
+    <div className="bg-test flex h-full w-full flex-col gap-4 rounded-xl p-4">
+      <p>Environment Humidity</p>
+      <div className="flex h-full w-full items-center">
+        <HumidityCurrentValue humidity={humidity} />
+        <HumidityLineChart lineChartData={lineChartData} />
+      </div>
     </div>
   );
 };

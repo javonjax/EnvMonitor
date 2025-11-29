@@ -5,7 +5,11 @@ export interface HumidityCurrentValueProps {
 }
 
 const HumidityCurrentValue = ({ humidity }: HumidityCurrentValueProps) => {
-  return <div className="h-[200px] w-[200px] shrink-0 border-2 border-blue-500">{humidity}</div>;
+  return (
+    <div className="flex h-[200px] w-[20%] shrink-0 items-center justify-center">
+      <p className="text-5xl font-semibold">{humidity + '%'}</p>
+    </div>
+  );
 };
 
 export default HumidityCurrentValue;

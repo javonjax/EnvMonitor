@@ -3,7 +3,11 @@ export interface TemperatureCurrentValueProps {
 }
 
 const TemperatureCurrentValue = ({ temperature }: TemperatureCurrentValueProps) => {
-  return <div className="h-[200px] w-[200px] shrink-0 border-2 border-blue-500">{temperature}</div>;
+  return (
+    <div className="flex w-[20%] shrink-0 items-center justify-center">
+      <p className="text-5xl font-semibold">{temperature + '°F'}</p>
+    </div>
+  );
 };
 
 export default TemperatureCurrentValue;

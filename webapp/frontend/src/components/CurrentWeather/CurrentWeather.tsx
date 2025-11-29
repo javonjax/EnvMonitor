@@ -21,18 +21,15 @@ const CurrentWeather = ({
 }: CurrentWeatherProps) => {
   return (
     <div className="bg-test flex h-full max-h-[250px] w-full flex-col gap-y-4 rounded-xl p-4">
-      <p className="w-full">Current Weather</p>
-      <div className="flex h-full w-full grow flex-col">
-        <p>Temperature: {temp + '°F'}</p>
-        <p>Feels like: {feelsLike + '°F'}</p>
-        <p>Humidity: {humidity + '%'}</p>
+      <p className="w-full">Current Weather Prediction</p>
+      <div className="flex w-full grow items-center justify-center">
+        <div className="flex h-full w-full grow flex-col">
+          <p>Temperature: {temp + '°F'}</p>
+          <p>Feels like: {feelsLike + '°F'}</p>
+          <p>Humidity: {humidity + '%'}</p>
+        </div>
         {weatherDescription ? getForecastIcon(weatherDescription) : ''}
-        {/* TODO: get better icons */}
-        {/* <img
-        src={`https://openweathermap.org/img/wn/${weatherIcon}@2x.png`}
-        alt={weatherDescription}
-      /> */}
-        {/* <p className="text-[12px]">{weatherOverview}</p> */}
+        <p>{weatherDescription}</p>
       </div>
       {/* <p>Last Update: {new Date(Number(timestamp)).toLocaleString()}</p> */}
     </div>

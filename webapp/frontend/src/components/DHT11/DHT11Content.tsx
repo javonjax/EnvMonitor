@@ -15,7 +15,7 @@ const DHT11Content = ({ temperature, humidity }: DHT11ContentProps) => {
 
   // Fetch initial line chart data.
   useEffect(() => {
-    const fetchInitialData = async (): Promise<void> => {
+    const fetchLineChartData = async (): Promise<void> => {
       try {
         const url: string = `${BACKED_DATA_24HR_URL}1`;
         const res: globalThis.Response = await fetch(url);
@@ -30,14 +30,16 @@ const DHT11Content = ({ temperature, humidity }: DHT11ContentProps) => {
       }
     };
 
-    fetchInitialData();
+    fetchLineChartData();
   }, []);
 
   return (
-    <div className="col-span-full row-span-4 border-2 border-red-500 lg:col-span-3">
-      <div className="flex h-full w-full flex-col items-center">
-        <TemperatureContent temperature={temperature} lineChartData={lineChartData} />
-        <HumidityContent humidity={humidity} lineChartData={lineChartData} />
+    <div className="col-span-full row-span-4 lg:col-span-3">
+      <div className="bg-accent flex h-full w-full flex-col gap-y-4 rounded-xl p-4">
+        <div className="flex h-full w-full flex-col items-center gap-y-4">
+          <TemperatureContent temperature={temperature} lineChartData={lineChartData} />
+          <HumidityContent humidity={humidity} lineChartData={lineChartData} />
+        </div>
       </div>
     </div>
   );
