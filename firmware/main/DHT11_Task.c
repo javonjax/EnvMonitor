@@ -17,8 +17,8 @@ void vDHT11_Task(void *pvParameters)
       gpio_set_level(params->DHT11->led_pin_num, 1);
       gpio_set_level(params->DHT11->led_pin_num, 0);
 
-      msg.msg_data.DHT11_Data.temp = *params->temperature;
-      msg.msg_data.DHT11_Data.humidity = *params->humidity;
+      msg.msg_data.temp = (*params->temperature * 9 / 5) + 32;
+      msg.msg_data.humidity = *params->humidity;
 
       if (client->is_connected)
       {

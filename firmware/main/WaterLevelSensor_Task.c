@@ -19,15 +19,15 @@ void vWaterLevelSensor_Task(void *pvParameters)
     adc_cali_raw_to_voltage(adc_cali_handle, adc_raw, &voltage);
     if (adc_raw > 750)
     {
-      msg.msg_data.water_level = "Ok";
+      strcpy(msg.msg_data.water_level, "OK");
     }
     else if (adc_raw > 150)
     {
-      msg.msg_data.water_level = "Low";
+      strcpy(msg.msg_data.water_level, "Low");
     }
     else
     {
-      msg.msg_data.water_level = "Empty";
+      strcpy(msg.msg_data.water_level, "Empty");
     }
     if (client->is_connected)
     {

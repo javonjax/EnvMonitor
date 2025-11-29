@@ -2,6 +2,12 @@ import express, { type Request, response, type Response, Router } from 'express'
 import dotenv from 'dotenv';
 import { DynamoDBClient, QueryCommand, type QueryCommandOutput } from '@aws-sdk/client-dynamodb';
 import { unmarshall } from '@aws-sdk/util-dynamodb';
+import {
+  EnvMonitorDataArraySchema,
+  EnvMonitorDataSchema,
+  type EnvMonitorData,
+  type EnvMonitorDataArray,
+} from '../types';
 
 dotenv.config();
 const router: Router = express.Router();
@@ -33,10 +39,14 @@ router.get('/data/24hr/:node', async (req: Request, res: Response) => {
         ':time': { N: queryTime.toString() },
       },
     });
-    const responseData: QueryCommandOutput = await dynamoClient.send(cmd);
-    console.log(responseData);
-    const items = responseData.Items?.map((item) => unmarshall(item)) ?? [];
-    res.status(200).json(items);
+    const dynamoRes: QueryCommandOutput = await dynamoClient.send(cmd);
+    const jsonArrayRes: unknown = dynamoRes.Items?.map((item) => unmarshall(item)) ?? [];
+    const parsedJson = EnvMonitorDataArraySchema.safeParse(jsonArrayRes);
+    if (!parsedJson.success) {
+      throw new Error('API response does not fit the desired schema.');
+    }
+    const dataAPIRes: EnvMonitorDataArray = parsedJson.data;
+    res.status(200).json(dataAPIRes);
     return;
   } catch (error) {
     if (error instanceof Error) {
@@ -66,9 +76,14 @@ router.get('/data/latest/:node', async (req: Request, res: Response) => {
       ScanIndexForward: false,
       Limit: 1,
     });
-    const responseData = await dynamoClient.send(cmd);
-    const items = responseData.Items?.map((item) => unmarshall(item)) ?? [];
-    res.status(200).json(items[0]);
+    const dynamoRes = await dynamoClient.send(cmd);
+    const jsonRes = dynamoRes.Items?.map((item) => unmarshall(item)) ?? [];
+    const parsedJson = EnvMonitorDataSchema.safeParse(jsonRes[0]);
+    if (!parsedJson.success) {
+      throw new Error('API response does not fit the desired schema.');
+    }
+    const dataAPIRes: EnvMonitorData = parsedJson.data;
+    res.status(200).json(dataAPIRes);
     return;
   } catch (error) {
     if (error instanceof Error) {

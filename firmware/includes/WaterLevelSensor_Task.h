@@ -8,6 +8,7 @@
 #include "WaterLevelSensor.h"
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
+#include <string.h>
 
 // Base water level sensor task params struct.
 typedef struct

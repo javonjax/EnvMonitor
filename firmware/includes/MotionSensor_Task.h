@@ -12,6 +12,8 @@
 #include "mqtt.h"
 #include <string.h>
 #include "MotionSensor.h"
+#include <time.h>
+#include <sys/time.h>
 
 #define GPIO_LOW 0
 #define GPIO_HIGH 1

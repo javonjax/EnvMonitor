@@ -17,7 +17,6 @@ const MainPage = () => {
       const url: string = `${BACKEND_DATA_LATEST_URL}1`;
       const res: globalThis.Response = await fetch(url);
       const data = await res.json();
-      console.log(data);
       setWebSocketData(data);
       return;
     };
