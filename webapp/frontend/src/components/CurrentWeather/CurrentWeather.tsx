@@ -18,17 +18,20 @@ const CurrentWeather = ({
   weatherOverview,
 }: CurrentWeatherProps) => {
   return (
-    <div className="flex h-full w-full flex-col items-center rounded-xl border-2 border-black p-4">
-      <p>{temp?.toFixed(2) + '°F'}</p>
-      <p>{feelsLike?.toFixed(2) + '°F'}</p>
-      <p>{humidity + '%'}</p>
-      {/* TODO: get better icons */}
-      {/* <img
+    <div className="bg-accent flex h-full w-full flex-col gap-y-4 rounded-xl p-4">
+      <p className="w-full">Current weather</p>
+      <div className="flex h-full w-full grow flex-col">
+        <p>Temperature: {temp?.toFixed(2) + '°F'}</p>
+        <p>Feels like: {feelsLike?.toFixed(2) + '°F'}</p>
+        <p>Humidity: {humidity + '%'}</p>
+        {/* TODO: get better icons */}
+        {/* <img
         src={`https://openweathermap.org/img/wn/${weatherIcon}@2x.png`}
         alt={weatherDescription}
       /> */}
-      <p className="text-[12px]">{weatherOverview}</p>
-      <p>Last Update: {new Date(Number(timestamp)).toLocaleString()}</p>
+        {/* <p className="text-[12px]">{weatherOverview}</p> */}
+      </div>
+      {/* <p>Last Update: {new Date(Number(timestamp)).toLocaleString()}</p> */}
     </div>
   );
 };
