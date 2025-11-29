@@ -20,12 +20,10 @@ router.get('/weather/current', async (req: Request, res: Response) => {
     let url: string = `${OPEN_WEATHER_MAP_ONECALL_URL}?lat=${STATION_LATITUDE}&lon=${STATION_LONGITUDE}&appid=${OPEN_WEATHER_MAP_API_KEY}&units=imperial&exclude=daily,hourly,minutely`;
     const apiResCurrentWeather: globalThis.Response = await fetch(url);
     const jsonResCurrentWeather = await apiResCurrentWeather.json();
-    console.log(jsonResCurrentWeather);
 
     url = `${OPEN_WEATHER_MAP_ONECALL_URL}/overview?lat=${STATION_LATITUDE}&lon=${STATION_LONGITUDE}&appid=${OPEN_WEATHER_MAP_API_KEY}&units=imperial`;
     const apiResWeatherOverview: globalThis.Response = await fetch(url);
     const jsonResWeatherOverview = await apiResWeatherOverview.json();
-    console.log(jsonResWeatherOverview);
 
     const jsonRes = { ...jsonResCurrentWeather, ...jsonResWeatherOverview };
     const parsedJson = CurrentWeatherAPIResponseSchema.safeParse(jsonRes);
@@ -49,7 +47,6 @@ router.get('/weather/forecast', async (req: Request, res: Response) => {
     let url: string = `${OPEN_WEATHER_MAP_ONECALL_URL}?lat=${STATION_LATITUDE}&lon=${STATION_LONGITUDE}&appid=${OPEN_WEATHER_MAP_API_KEY}&units=imperial&exclude=current,hourly,minutely`;
     let apiRes: globalThis.Response = await fetch(url);
     const jsonRes = await apiRes.json();
-    console.log(jsonRes);
     const parsedJson = DailyForecastAPIResponseSchema.safeParse(jsonRes);
     if (!parsedJson.success) {
       throw new Error('API response does not fit the desired schema.');
