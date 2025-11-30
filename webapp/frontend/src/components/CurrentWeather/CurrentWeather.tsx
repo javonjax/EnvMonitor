@@ -1,4 +1,5 @@
 import { getForecastIcon } from '@/lib/utils';
+import { SatelliteDish } from 'lucide-react';
 
 export interface CurrentWeatherProps {
   timestamp: number | undefined;
@@ -10,28 +11,25 @@ export interface CurrentWeatherProps {
   weatherOverview: string | undefined;
 }
 
-const CurrentWeather = ({
-  timestamp,
-  feelsLike,
-  humidity,
-  temp,
-  weatherDescription,
-  weatherIcon,
-  weatherOverview,
-}: CurrentWeatherProps) => {
+const CurrentWeather = ({ feelsLike, humidity, temp, weatherDescription }: CurrentWeatherProps) => {
   return (
-    <div className="bg-test flex h-full max-h-[250px] w-full flex-col gap-y-4 rounded-xl p-4">
-      <p className="w-full">Current Weather Prediction</p>
-      <div className="flex w-full grow items-center justify-center">
-        <div className="flex h-full w-full grow flex-col">
-          <p>Temperature: {temp + '°F'}</p>
-          <p>Feels like: {feelsLike + '°F'}</p>
-          <p>Humidity: {humidity + '%'}</p>
-        </div>
-        {weatherDescription ? getForecastIcon(weatherDescription) : ''}
-        <p>{weatherDescription}</p>
+    <div className="bg-accent flex h-full w-[50%] flex-col items-center justify-center gap-y-4 rounded-xl p-4">
+      <div className="flex w-full items-center gap-x-2">
+        <SatelliteDish size={36} />
+        <p className="w-full text-2xl font-semibold">Current Weather</p>
       </div>
-      {/* <p>Last Update: {new Date(Number(timestamp)).toLocaleString()}</p> */}
+      <div className="bg-test flex h-full max-h-[250px] w-full flex-col gap-y-4 rounded-xl p-4">
+        <div className="flex w-full grow items-center justify-center">
+          <div className="flex h-full w-full grow flex-col">
+            <p>Temperature: {temp + '°F'}</p>
+            <p>Feels like: {feelsLike + '°F'}</p>
+            <p>Humidity: {humidity + '%'}</p>
+          </div>
+          {weatherDescription ? getForecastIcon(weatherDescription) : ''}
+          <p>{weatherDescription}</p>
+        </div>
+        {/* <p>Last Update: {new Date(Number(timestamp)).toLocaleString()}</p> */}
+      </div>
     </div>
   );
 };

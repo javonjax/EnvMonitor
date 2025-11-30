@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import type { EnvMonitorData } from '../../../../backend/src/types';
 import HumidityContent from './Humidity/HumidityContent';
 import TemperatureContent from './Temperature/TemperatureContent';
+import { Wifi } from 'lucide-react';
 
 const BACKED_DATA_24HR_URL: string = import.meta.env.VITE_BACKEND_DATA_24HR_URL as string;
 
@@ -34,8 +35,13 @@ const DHT11Content = ({ temperature, humidity }: DHT11ContentProps) => {
   }, []);
 
   return (
-    <div className="col-span-full row-span-4 lg:col-span-3">
+    <div className="col-span-full row-span-4 p-4 lg:col-span-3">
       <div className="bg-accent flex h-full w-full flex-col gap-y-4 rounded-xl p-4">
+        <div className="flex w-full items-center gap-x-2">
+          <Wifi size={32} />
+          <p className="w-full text-2xl font-semibold">ESP32 DHT11</p>
+        </div>
+
         <div className="flex h-full w-full flex-col items-center gap-y-4">
           <TemperatureContent temperature={temperature} lineChartData={lineChartData} />
           <HumidityContent humidity={humidity} lineChartData={lineChartData} />

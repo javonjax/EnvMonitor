@@ -1,3 +1,4 @@
+import { MapPin } from 'lucide-react';
 import CurrentDateTime from './CurrentDateTime';
 
 export interface CurrentDateTimeContentProps {

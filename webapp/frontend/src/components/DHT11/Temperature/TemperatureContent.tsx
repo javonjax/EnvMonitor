@@ -10,8 +10,8 @@ export interface TemperatureContentProps {
 const TemperatureContent = ({ temperature, lineChartData }: TemperatureContentProps) => {
   return (
     <div className="bg-test flex h-full w-full flex-col gap-4 rounded-xl p-4">
-      <p>Environment Temperature</p>
-      <div className="flex h-full w-full items-center">
+      <p>Temperature</p>
+      <div className="flex h-full w-full items-center gap-x-4">
         <TemperatureCurrentValue temperature={temperature} />
         <TemperatureLineChart lineChartData={lineChartData} />
       </div>

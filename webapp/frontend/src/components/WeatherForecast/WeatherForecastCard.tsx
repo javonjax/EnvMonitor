@@ -1,4 +1,4 @@
-import { daysOfTheWeek, getForecastIcon } from '@/lib/utils';
+import { getForecastIcon } from '@/lib/utils';
 import type { DailyForecastDay } from '@backend/types';
 
 export interface WeatherForecastCardProps {
@@ -8,7 +8,9 @@ export interface WeatherForecastCardProps {
 const WeatherForecastCard = ({ forecastDay }: WeatherForecastCardProps) => {
   return (
     <div className="bg-test flex flex-col justify-center gap-y-2 rounded-xl p-4">
-      {forecastDay && <p>{daysOfTheWeek[new Date(forecastDay.dt).getDay()]}</p>}
+      {forecastDay && (
+        <p>{new Date(forecastDay.dt).toLocaleString('en-US', { weekday: 'long' })}</p>
+      )}
       <div className="flex gap-x-4">
         <p>{forecastDay?.temp + '°F'}</p>
         {forecastDay ? getForecastIcon(forecastDay.weatherDescription) : ''}

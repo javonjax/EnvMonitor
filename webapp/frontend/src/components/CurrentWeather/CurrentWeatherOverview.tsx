@@ -1,11 +1,18 @@
+import { Sparkles } from 'lucide-react';
+
 export interface CurrentWeatherOverviewProps {
   weatherOverview: string | undefined;
 }
 const CurrentWeatherOverview = ({ weatherOverview }: CurrentWeatherOverviewProps) => {
   return (
-    <div className="bg-test flex h-full max-h-[250px] min-h-0 w-full flex-col gap-y-2 rounded-xl p-4">
-      <p className="w-full">AI Weather Overview</p>
-      <p className="overflow-y-auto text-[14px]">{weatherOverview}</p>
+    <div className="bg-accent flex h-full w-[50%] flex-col items-center justify-center gap-y-4 rounded-xl p-4">
+      <div className="flex w-full items-center gap-x-2">
+        <Sparkles size={32} />
+        <p className="w-full text-2xl font-semibold">AI Weather Overview</p>
+      </div>
+      <div className="bg-test flex h-full max-h-[250px] min-h-0 w-full rounded-xl p-4">
+        <p className="overflow-y-auto text-[14px]">{weatherOverview}</p>
+      </div>
     </div>
   );
 };
