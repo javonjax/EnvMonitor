@@ -11,9 +11,9 @@ const WeatherForecastCard = ({ forecastDay }: WeatherForecastCardProps) => {
       {forecastDay && (
         <p>{new Date(forecastDay.dt).toLocaleString('en-US', { weekday: 'long' })}</p>
       )}
-      <div className="flex gap-x-4">
+      <div className="flex items-center gap-x-4">
         <p>{forecastDay?.temp + '°F'}</p>
-        {forecastDay ? getForecastIcon(forecastDay.weatherDescription) : ''}
+        {forecastDay ? getForecastIcon(forecastDay.weatherDescription, 36) : ''}
       </div>
       <div className="flex w-full gap-x-2">
         <p className="text-[12px] text-nowrap">L: {forecastDay?.tempMin + '°F'}</p>

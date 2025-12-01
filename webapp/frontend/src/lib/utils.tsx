@@ -21,19 +21,19 @@ export function cn(...inputs: ClassValue[]) {
  * @param description Description of weather conditions.
  * @returns Weather icon.
  */
-export const getForecastIcon = (description: string): React.JSX.Element => {
+export const getForecastIcon = (description: string, size: number): React.JSX.Element => {
   if (description.includes('thunderstorm')) {
-    return <CloudLightning />;
+    return <CloudLightning size={size} />;
   } else if (description.includes('drizzle')) {
-    return <CloudDrizzle />;
+    return <CloudDrizzle size={size} />;
   } else if (description.includes('rain')) {
-    return <CloudRain />;
+    return <CloudRain size={size} />;
   } else if (description.includes('snow')) {
-    return <Snowflake />;
+    return <Snowflake size={size} />;
   } else if (description.includes('overcast')) {
-    return <Cloudy />;
+    return <Cloudy size={size} />;
   } else if (description.includes('clouds')) {
-    return <Cloud />;
+    return <Cloud size={size} />;
   } else if (
     description.includes('mist') ||
     description.includes('smoke') ||
@@ -43,8 +43,8 @@ export const getForecastIcon = (description: string): React.JSX.Element => {
     description.includes('ash') ||
     description.includes('squall')
   ) {
-    return <CloudFog />;
+    return <CloudFog size={size} />;
   } else {
-    return <Sun />;
+    return <Sun size={size} />;
   }
 };

@@ -1,68 +1,35 @@
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-  CardContent,
-  CardFooter,
-} from '@/components/ui/card';
-import {
-  ChartContainer,
-  ChartTooltip,
-  ChartTooltipContent,
-  type ChartConfig,
-} from '@/components/ui/chart';
+import { ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart';
 import type { EnvMonitorData } from '@backend/types';
-import { TrendingUp } from 'lucide-react';
-import { AreaChart, CartesianGrid, XAxis, Area } from 'recharts';
+import { AreaChart, CartesianGrid, XAxis, Area, YAxis } from 'recharts';
 
 export interface TemperatureLineChartProps {
   lineChartData: EnvMonitorData[];
 }
 
 const TemperatureLineChart = ({ lineChartData }: TemperatureLineChartProps) => {
-  const chartData = [
-    { month: 'January', desktop: 186 },
-    { month: 'February', desktop: 305 },
-    { month: 'March', desktop: 237 },
-    { month: 'April', desktop: 73 },
-    { month: 'May', desktop: 209 },
-    { month: 'June', desktop: 214 },
-  ];
-
-  const chartConfig = {
-    desktop: {
-      label: 'Desktop',
-      color: 'var(--chart-1)',
-    },
-  } satisfies ChartConfig;
+  const chartData = lineChartData.map((item) => ({
+    timestamp: new Date(item.timestamp).toLocaleTimeString('en-US', {
+      hour: 'numeric',
+      minute: 'numeric',
+    }),
+    temperature: item.temperature,
+  }));
 
   return (
     <div className="h-[200px] w-[80%]">
-      <ChartContainer config={chartConfig} className="h-full w-full">
-        <AreaChart
-          accessibilityLayer
-          data={chartData}
-          margin={{
-            left: 12,
-            right: 12,
-          }}
-        >
+      <ChartContainer config={{}} className="h-full w-full">
+        <AreaChart accessibilityLayer data={chartData}>
           <CartesianGrid vertical={false} />
-          <XAxis
-            dataKey="month"
-            tickLine={false}
-            axisLine={false}
-            tickMargin={8}
-            tickFormatter={(value) => value.slice(0, 3)}
-          />
+          <XAxis dataKey="timestamp" tickLine={false} axisLine={false} tickMargin={8} />
+          <YAxis dataKey="temperature" domain={['dataMin - 10', 'dataMax + 10']} tickLine={false} />
           <ChartTooltip cursor={false} content={<ChartTooltipContent indicator="line" />} />
           <Area
-            dataKey="desktop"
+            dataKey="temperature"
             type="natural"
-            fill="var(--color-desktop)"
-            fillOpacity={0.4}
-            stroke="var(--color-desktop)"
+            fill="var(--color-background)"
+            fillOpacity={0.6}
+            stroke="var(--color-foreground)"
+            strokeOpacity={0.8}
           />
         </AreaChart>
       </ChartContainer>

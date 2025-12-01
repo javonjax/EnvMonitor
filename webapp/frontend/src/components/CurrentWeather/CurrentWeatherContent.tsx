@@ -35,8 +35,8 @@ const CurrentWeatherContent = () => {
   }, []);
 
   return (
-    <div className="col-span-full row-span-2 p-4 lg:col-span-3">
-      <div className="flex h-full w-full gap-x-4">
+    <div className="col-span-full row-span-2 p-4 lg:col-span-6">
+      <div className="flex h-full w-full flex-col gap-8 lg:flex-row">
         <CurrentWeather
           feelsLike={currentWeather?.feelsLike}
           humidity={currentWeather?.humidity}

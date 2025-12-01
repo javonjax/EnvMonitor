@@ -7,7 +7,7 @@ export interface CurrentDateTimeContentProps {
 
 const CurrentDateTimeContent = ({ currentDateTime }: CurrentDateTimeContentProps) => {
   return (
-    <div className="col-span-full row-span-2 p-4 lg:col-span-3">
+    <div className="col-span-full row-span-2 p-4 lg:col-span-6">
       <CurrentDateTime currentDateTime={currentDateTime} />
     </div>
   );

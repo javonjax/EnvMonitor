@@ -35,7 +35,7 @@ const DHT11Content = ({ temperature, humidity }: DHT11ContentProps) => {
   }, []);
 
   return (
-    <div className="col-span-full row-span-4 p-4 lg:col-span-3">
+    <div className="col-span-full row-span-4 p-4 lg:col-span-6">
       <div className="bg-accent flex h-full w-full flex-col gap-y-4 rounded-xl p-4">
         <div className="flex w-full items-center gap-x-2">
           <Wifi size={32} />

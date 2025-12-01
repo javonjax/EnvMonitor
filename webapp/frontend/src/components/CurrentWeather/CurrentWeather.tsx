@@ -13,22 +13,23 @@ export interface CurrentWeatherProps {
 
 const CurrentWeather = ({ feelsLike, humidity, temp, weatherDescription }: CurrentWeatherProps) => {
   return (
-    <div className="bg-accent flex h-full w-[50%] flex-col items-center justify-center gap-y-4 rounded-xl p-4">
+    <div className="bg-accent flex h-full w-full flex-col items-center justify-center gap-y-4 rounded-xl p-4 lg:w-[50%]">
       <div className="flex w-full items-center gap-x-2">
         <SatelliteDish size={36} />
         <p className="w-full text-2xl font-semibold">Current Weather</p>
       </div>
-      <div className="bg-test flex h-full max-h-[250px] w-full flex-col gap-y-4 rounded-xl p-4">
+      <div className="bg-test flex h-full max-h-[250px] w-full flex-col gap-y-4 rounded-xl border-2 p-4">
         <div className="flex w-full grow items-center justify-center">
-          <div className="flex h-full w-full grow flex-col">
+          <div className="flex h-full w-full flex-col">
             <p>Temperature: {temp + '°F'}</p>
             <p>Feels like: {feelsLike + '°F'}</p>
             <p>Humidity: {humidity + '%'}</p>
           </div>
-          {weatherDescription ? getForecastIcon(weatherDescription) : ''}
-          <p>{weatherDescription}</p>
+          <div className="flex h-full w-full flex-col items-center justify-center">
+            {weatherDescription ? getForecastIcon(weatherDescription, 96) : ''}
+            <p>{weatherDescription}</p>
+          </div>
         </div>
-        {/* <p>Last Update: {new Date(Number(timestamp)).toLocaleString()}</p> */}
       </div>
     </div>
   );

@@ -12,22 +12,22 @@ const CurrentDateTime = ({ currentDateTime }: CurrentDateTimeProps) => {
         <p className="text-2xl font-semibold">Riverview, FL</p>
       </div>
       <div className="flex h-full w-full flex-col items-center justify-center">
-        <div className="text-8xl font-semibold">
+        <p className="text-8xl font-semibold">
           {currentDateTime.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })}
-        </div>
+        </p>
 
-        <div>
+        <p>
           {currentDateTime.toLocaleString('en-US', {
             weekday: 'long',
           })}
-        </div>
-        <div>
+        </p>
+        <p>
           {currentDateTime.toLocaleDateString('en-US', {
             year: 'numeric',
             month: 'long',
             day: 'numeric',
           })}
-        </div>
+        </p>
       </div>
     </div>
   );

@@ -51,7 +51,7 @@ const MainPage = () => {
 
   return (
     <div className="bg-background flex grow justify-center">
-      <div className="grid grow grid-flow-col grid-cols-6 grid-rows-6">
+      <div className="grid grow grid-flow-col grid-cols-12 grid-rows-6">
         {/* Temp and humidity */}
         <CurrentDateTimeContent currentDateTime={currentDateTime} />
 

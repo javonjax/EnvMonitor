@@ -32,7 +32,7 @@ const WeatherForecastContent = () => {
     return () => clearInterval(interval);
   }, []);
   return (
-    <div className="col-span-full row-span-2 p-4 lg:col-span-3">
+    <div className="col-span-full row-span-2 p-4 lg:col-span-6">
       <div className="bg-accent flex h-full w-full flex-col rounded-xl p-4">
         <div className="flex w-full items-center gap-x-2">
           <CalendarDays size={32} />
