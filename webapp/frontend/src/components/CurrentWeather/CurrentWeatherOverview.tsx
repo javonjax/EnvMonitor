@@ -1,4 +1,5 @@
 import { Sparkles } from 'lucide-react';
+import LoadingSpinner from '../ui/Custom/LoadingSpinner';
 
 export interface CurrentWeatherOverviewProps {
   weatherOverview: string | undefined;
@@ -11,7 +12,8 @@ const CurrentWeatherOverview = ({ weatherOverview }: CurrentWeatherOverviewProps
         <p className="w-full text-2xl font-semibold">AI Weather Overview</p>
       </div>
       <div className="bg-test flex h-full max-h-[250px] min-h-0 w-full rounded-xl p-4">
-        <p className="overflow-y-auto text-[14px]">{weatherOverview}</p>
+        {!weatherOverview && <LoadingSpinner />}
+        {weatherOverview && <p className="overflow-y-auto text-[14px]">{weatherOverview}</p>}
       </div>
     </div>
   );

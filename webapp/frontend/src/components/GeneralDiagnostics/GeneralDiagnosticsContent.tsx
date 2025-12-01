@@ -1,22 +1,17 @@
 import WaterLevel from './WaterLevel';
 
 import LastFeedTime from './LastFeedTime';
-import MotionDetection from './MotionDetection';
-import { useEffect, useState } from 'react';
-import { Droplet, Wifi } from 'lucide-react';
+import { Wifi } from 'lucide-react';
+import LoadingSpinner from '../ui/Custom/LoadingSpinner';
 
 export interface GeneralDiagnosticsContentProps {
   waterLevel: string | undefined;
   lastFeedTime: number | undefined;
-  motionDetection: string | undefined;
-  lastMessageTime: number | undefined;
 }
 
 const GeneralDiagnosticsContent = ({
   waterLevel,
   lastFeedTime,
-  motionDetection,
-  lastMessageTime,
 }: GeneralDiagnosticsContentProps) => {
   return (
     <div className="col-span-full row-span-2 p-4 lg:col-span-6">
@@ -27,9 +22,13 @@ const GeneralDiagnosticsContent = ({
         </div>
 
         <div className="bg-accent flex h-full w-full flex-wrap items-center justify-evenly gap-4 p-4">
-          <WaterLevel waterLevel={waterLevel} />
-          <LastFeedTime lastFeedTime={lastFeedTime} />
-          {/* <MotionDetection motionDetection={motionDetection} /> */}
+          {!(waterLevel && lastFeedTime) && <LoadingSpinner />}
+          {waterLevel && lastFeedTime && (
+            <>
+              <WaterLevel waterLevel={waterLevel} />
+              <LastFeedTime lastFeedTime={lastFeedTime} />
+            </>
+          )}
         </div>
       </div>
     </div>
