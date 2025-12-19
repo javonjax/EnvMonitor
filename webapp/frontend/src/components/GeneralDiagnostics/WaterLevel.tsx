@@ -8,8 +8,8 @@ export interface WaterLevelProps {
 const WaterLevel = ({ waterLevel }: WaterLevelProps) => {
   return (
     <div className="h-[200px] w-[200px] shrink-0">
-      <div className="bg-test flex h-full w-full flex-col items-center justify-center gap-y-4 rounded-xl">
-        <p>Bird Bath</p>
+      <div className="bg-accent flex h-full w-full flex-col items-center justify-center gap-y-4 rounded-xl">
+        <p>Standing Water Level</p>
         {(() => {
           switch (waterLevel) {
             case 'Empty':

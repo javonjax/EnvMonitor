@@ -5,6 +5,7 @@ import WeatherForecastContent from './WeatherForecast/WeatherForecastContent';
 import CurrentWeatherContent from './CurrentWeather/CurrentWeatherContent';
 import GeneralDiagnosticsContent from './GeneralDiagnostics/GeneralDiagnosticsContent';
 import CurrentDateTimeContent from './CurrentDateTime/CurrentDateTimeContent';
+import CurrentConditionsSection from './CurrentConditions/CurrentConditionsSection';
 
 const BACKEND_DATA_LATEST_URL: string = import.meta.env.VITE_BACKEND_DATA_LATEST_URL as string;
 const BACKEND_WEBSOCKET_URL: string = import.meta.env.VITE_BACKEND_WEBSOCKET_URL as string;
@@ -50,20 +51,18 @@ const MainPage = () => {
   }, []);
 
   return (
-    <div className="bg-background flex grow justify-center">
-      <div className="grid grow grid-flow-col grid-cols-12 grid-rows-6">
+    <div className="flex grow justify-center bg-black">
+      <div className="grid grow grid-cols-12 grid-rows-[500px_500px_500px]">
         {/* Temp and humidity */}
-        <CurrentDateTimeContent currentDateTime={currentDateTime} />
-
-        <CurrentWeatherContent />
+        {/* <CurrentDateTimeContent currentDateTime={currentDateTime} /> */}
+        <CurrentConditionsSection currentDateTime={currentDateTime} />
+        {/* <CurrentWeatherContent /> */}
 
         <WeatherForecastContent />
         <DHT11Content humidity={websocketData?.humidity} temperature={websocketData?.temperature} />
         <GeneralDiagnosticsContent
           waterLevel={websocketData?.waterLevel}
           lastFeedTime={websocketData?.lastFeedTime}
-          motionDetection={websocketData?.motionDetection}
-          lastMessageTime={websocketData?.timestamp}
         />
       </div>
     </div>

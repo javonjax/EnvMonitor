@@ -10,7 +10,7 @@ export interface HumidityContentProps {
 
 const HumidityContent = ({ humidity, lineChartData }: HumidityContentProps) => {
   return (
-    <div className="bg-test flex h-full w-full flex-col gap-4 rounded-xl p-4">
+    <div className="bg-accent flex h-full w-full flex-col gap-4 rounded-xl p-4">
       <p className="text-xl">Humidity</p>
       <div className="flex h-full w-full items-center gap-x-2">
         {!(humidity && lineChartData) && <LoadingSpinner />}

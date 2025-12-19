@@ -7,7 +7,7 @@ export interface WeatherForecastCardProps {
 
 const WeatherForecastCard = ({ forecastDay }: WeatherForecastCardProps) => {
   return (
-    <div className="bg-test flex flex-col justify-center gap-y-2 rounded-xl p-4">
+    <div className="bg-accent flex flex-col justify-center gap-y-2 rounded-xl p-4">
       {forecastDay && (
         <p>{new Date(forecastDay.dt).toLocaleString('en-US', { weekday: 'long' })}</p>
       )}
