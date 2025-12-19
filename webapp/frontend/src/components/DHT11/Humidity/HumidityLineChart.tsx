@@ -10,10 +10,12 @@ const HumidityLineChart = ({ lineChartData }: HumidityLineChartProps) => {
     timestamp: new Date(item.timestamp).toLocaleTimeString('en-US', {
       hour: 'numeric',
       minute: 'numeric',
+      weekday: 'short',
     }),
     humidity: item.humidity,
   }));
 
+  console.log(chartData);
   return (
     <div className="h-[200px] w-[80%]">
       <ChartContainer config={{}} className="h-full w-full">

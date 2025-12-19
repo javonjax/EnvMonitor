@@ -11,6 +11,7 @@ const TemperatureLineChart = ({ lineChartData }: TemperatureLineChartProps) => {
     timestamp: new Date(item.timestamp).toLocaleTimeString('en-US', {
       hour: 'numeric',
       minute: 'numeric',
+      weekday: 'short',
     }),
     temperature: item.temperature,
   }));
