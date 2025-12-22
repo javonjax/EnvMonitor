@@ -4,12 +4,12 @@
 #include "DHT11.h"
 #include "MotionSensor.h"
 #include "WaterLevelSensor.h"
-#include "ServoFeeder.h"
+#include "ServoMotor.h"
 #include "cJSON.h"
 #include "DHT11_Task.h"
 #include "MotionSensor_Task.h"
 #include "WaterLevelSensor_Task.h"
-#include "ServoFeeder_Task.h"
+#include "Servo_Task.h"
 #include "Publisher_Task.h"
 #include <esp_sntp.h>
 #include <esp_netif_sntp.h>
@@ -98,13 +98,13 @@ void app_main(void)
       .mqtt_client_node = &mqtt_client_Node1};
   /* Water level sensor end */
 
-  /* Servo feeder start */
-  static servo_feeder_t servo_feeder;
-  servo_feeder = ServoFeeder_Create(SERVO_FEEDER_PIN, SERVO_FEEDER_CHANNEL);
-  static ServoFeeder_TaskParams_t ServoFeeder_TaskParams = {
-      .servo_feeder = &servo_feeder,
+  /* Servo motor start */
+  static servo_t servo_motor;
+  servo_motor = Servo_Create(SERVO_PIN, SERVO_CHANNEL);
+  static Servo_TaskParams_t Servo_TaskParams = {
+      .servo = &servo_motor,
       .mqtt_client_node = &mqtt_client_Node1};
-  /* Servo feeder end */
+  /* Servo motor end */
 
   // Create queue for device messages.
   data_queue = xQueueCreate(10, sizeof(data_queue_msg_t));
@@ -115,5 +115,5 @@ void app_main(void)
   xTaskCreate(vDHT11_Task, "DHT11", 2048, &DHT11_TaskParams, 1, NULL);
   xTaskCreate(vMotionSensor_Task, "Motion activated lights", 2400, &MotionSensor_TaskParams, 1, NULL);
   xTaskCreate(vWaterLevelSensor_Task, "Water level sensor", 2048, &WaterLevelSensor_TaskParams, 1, NULL);
-  xTaskCreate(vServoFeeder_Task, "Servo feeder task", 2400, &ServoFeeder_TaskParams, 1, NULL);
+  xTaskCreate(vServo_Task, "Servo task", 2400, &Servo_TaskParams, 1, NULL);
 }

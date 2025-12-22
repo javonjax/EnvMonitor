@@ -1,5 +1,5 @@
 /**
- *  Servo motor feeder driver.
+ *  Servo motor driver.
  *  Datasheet: http://www.ee.ic.ac.uk/pcheung/teaching/DE1_EE/stores/sg90_datasheet.pdf
  *  IMPORTANT NOTE: In order to get the servo to work, I needed to add the following line to
  *  the CMakeLists file in managed_components/espressif_servo:
@@ -11,8 +11,8 @@
 #pragma once
 
 #define SERVO_SPEED LEDC_LOW_SPEED_MODE
-#define SERVO_FEEDER_PIN GPIO_NUM_41
-#define SERVO_FEEDER_CHANNEL LEDC_CHANNEL_0
+#define SERVO_PIN GPIO_NUM_41
+#define SERVO_CHANNEL LEDC_CHANNEL_0
 
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
@@ -22,32 +22,40 @@
 #include <sys/time.h>
 
 /**
- * Base feeder struct.
+ * Base servo struct.
  */
 typedef struct
 {
   gpio_num_t pin;
   ledc_channel_t channel;
-} servo_feeder_t;
+} servo_t;
 
 /**
- * @brief Create a new feeder struct.
- * This is passed into feeder functions so
- * multiple feeders can be configured and activated separately.
+ * @brief Create a new servo struct.
+ * This is passed into servo functions so
+ * multiple servos can be configured and activated separately.
  *
  * @param pin GPIO pin number
  * @param channel LEDC_Channel
  *
- * @return Feeder struct.
+ * @return Servo struct.
  */
-servo_feeder_t ServoFeeder_Create(gpio_num_t pin, ledc_channel_t channel);
+servo_t Servo_Create(gpio_num_t pin, ledc_channel_t channel);
 
 /**
- * @brief Trigger the feeder.
- * Triggers one feed action
+ * @brief Set the servo to open position.
  *
- * @param feeder Pointer to existing feeder struct.
+ * @param servo Pointer to an existing servo struct.
  *
- * @return esp_err_t status.
+ * @return esp_err_t status;
  */
-esp_err_t ServoFeeder_Feed(servo_feeder_t *feeder);
+esp_err_t Servo_Open(servo_t *servo);
+
+/**
+ * @brief Set the servo to closed position.
+ *
+ * @param servo Pointer to an existing servo struct.
+ *
+ * @return esp_err_t status;
+ */
+esp_err_t Servo_Close(servo_t *servo);

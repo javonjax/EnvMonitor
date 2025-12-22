@@ -29,7 +29,7 @@ typedef enum
   DHT11,
   MOTION_SENSOR,
   WATER_LEVEL_SENSOR,
-  SERVO_FEEDER
+  SERVO_MOTOR
 } msg_source_t;
 
 /**
@@ -48,9 +48,9 @@ typedef struct
 
     char motion_detection_status[16];
 
-    uint64_t last_feed_timestamp;
+    uint64_t last_servo_trigger_timestamp;
 
-    uint64_t last_motion_detected_time;
+    uint64_t last_motion_detected_timestamp;
   } msg_data;
 } data_queue_msg_t;
 
