@@ -38,6 +38,7 @@ router.get('/data/recent/:node', async (req: Request, res: Response) => {
       },
       ScanIndexForward: false,
       Limit: 50,
+      ConsistentRead: true,
     });
 
     const dynamoRes: QueryCommandOutput = await dynamoClient.send(cmd);

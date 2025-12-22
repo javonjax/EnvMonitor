@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import type { DailyForecasetAPIResponse } from '@backend/types';
 import WeatherForecast from './WeatherForecast';
 import { CalendarDays } from 'lucide-react';
+import { errorToast, handleAPIError, handleAPIFetch } from '@/lib/utils';
 
 const BACKEND_WEATHER_FORECAST_URL = import.meta.env.VITE_BACKEND_WEATHER_FORECAST_URL as string;
 
@@ -12,13 +13,14 @@ const WeatherForecastContent = () => {
     const fetchWeatherForecast = async (): Promise<void> => {
       try {
         const url: string = BACKEND_WEATHER_FORECAST_URL;
-        const res: globalThis.Response = await fetch(url);
+        const res: globalThis.Response = await handleAPIFetch(await fetch(url));
         const weatherForecastData: DailyForecasetAPIResponse = await res.json();
         setWeatherForecast(weatherForecastData);
       } catch (error) {
-        // TODO: frontend error handling
         if (error instanceof Error) {
-          console.log(error.message);
+          handleAPIError(error);
+        } else {
+          errorToast();
         }
       }
     };

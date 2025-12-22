@@ -95,6 +95,7 @@ export const CurrentWeatherAPIResponseSchema = z
     weatherDescription: data.current.weather[0]?.description,
     weatherIcon: data.current.weather[0]?.icon,
     weatherOverview: data.weather_overview,
+    timestamp: Date.now(),
   }));
 
 export type CurrentWeatherAPIResponse = z.infer<typeof CurrentWeatherAPIResponseSchema>;
