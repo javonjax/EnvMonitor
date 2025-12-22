@@ -23,24 +23,26 @@ const dynamoClient = new DynamoDBClient({
 /**
  * GET the last 24 hours of data from the specified device node.
  */
-router.get('/data/24hr/:node', async (req: Request, res: Response) => {
+router.get('/data/recent/:node', async (req: Request, res: Response) => {
   try {
     const node: string = req.params.node || '1';
-    const queryTime: number = Date.now() - 24 * 3600 * 1000;
+    // const queryTime: number = Date.now() - 24 * 3600 * 1000;
     const cmd = new QueryCommand({
       TableName: process.env.AWS_DYNAMO_TABLE,
-      KeyConditionExpression: '#dn = :device AND #ts >= :time',
+      KeyConditionExpression: '#dn = :device',
       ExpressionAttributeNames: {
         '#dn': 'deviceName',
-        '#ts': 'timestamp',
       },
       ExpressionAttributeValues: {
         ':device': { S: `${process.env.AWS_IOT_CORE_DEVICE_NAME_BASE}${node}` },
-        ':time': { N: queryTime.toString() },
       },
+      ScanIndexForward: false,
+      Limit: 50,
+      ConsistentRead: true,
     });
+
     const dynamoRes: QueryCommandOutput = await dynamoClient.send(cmd);
-    const jsonArrayRes: unknown = dynamoRes.Items?.map((item) => unmarshall(item)) ?? [];
+    const jsonArrayRes: unknown = dynamoRes.Items?.reverse().map((item) => unmarshall(item)) ?? [];
     const parsedJson = EnvMonitorDataArraySchema.safeParse(jsonArrayRes);
     if (!parsedJson.success) {
       throw new Error('API response does not fit the desired schema.');

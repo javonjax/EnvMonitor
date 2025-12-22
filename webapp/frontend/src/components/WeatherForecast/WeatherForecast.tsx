@@ -1,5 +1,6 @@
 import type { DailyForecasetAPIResponse } from '@backend/types';
 import WeatherForecastCard from './WeatherForecastCard';
+import LoadingSpinner from '../ui/Custom/LoadingSpinner';
 
 export interface WeatherForecastProps {
   weatherForecast: DailyForecasetAPIResponse | undefined;
@@ -7,13 +8,15 @@ export interface WeatherForecastProps {
 
 const WeatherForecast = ({ weatherForecast }: WeatherForecastProps) => {
   return (
-    <div className="bg-accent flex h-full w-full flex-col rounded-xl p-4">
-      <p className="w-full">Weather Forecast</p>
-      <div className="flex w-full grow items-center justify-evenly gap-x-4 overflow-x-auto">
-        {weatherForecast?.slice(1).map((forecastDay) => (
-          <WeatherForecastCard key={forecastDay.dt} forecastDay={forecastDay} />
-        ))}
-      </div>
+    <div className="flex w-full grow items-center justify-evenly gap-x-4 overflow-x-auto py-4">
+      {!weatherForecast && <LoadingSpinner />}
+      {weatherForecast &&
+        weatherForecast.length > 0 &&
+        weatherForecast
+          .slice(1)
+          .map((forecastDay) => (
+            <WeatherForecastCard key={forecastDay.dt} forecastDay={forecastDay} />
+          ))}
     </div>
   );
 };

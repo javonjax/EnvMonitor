@@ -17,7 +17,7 @@ const router: Router = express.Router();
 
 router.get('/weather/current', async (req: Request, res: Response) => {
   try {
-    let url: string = `${OPEN_WEATHER_MAP_ONECALL_URL}?lat=${STATION_LATITUDE}&lon=${STATION_LONGITUDE}&appid=${OPEN_WEATHER_MAP_API_KEY}&units=imperial&exclude=daily,hourly,minutely`;
+    let url: string = `${OPEN_WEATHER_MAP_ONECALL_URL}?lat=${STATION_LATITUDE}&lon=${STATION_LONGITUDE}&appid=${OPEN_WEATHER_MAP_API_KEY}&units=imperial&exclude=hourly,minutely`;
     const apiResCurrentWeather: globalThis.Response = await fetch(url);
     const jsonResCurrentWeather = await apiResCurrentWeather.json();
 
@@ -32,7 +32,7 @@ router.get('/weather/current', async (req: Request, res: Response) => {
     }
 
     const currentWeatherAPIRes: CurrentWeatherAPIResponse = parsedJson.data;
-    currentWeatherAPIRes.dt *= 1000; // NOTE: The Open Weather Map API provides datetime data in seconds.
+
     res.status(200).json(currentWeatherAPIRes);
   } catch (error) {
     if (error instanceof Error) {
@@ -54,10 +54,6 @@ router.get('/weather/forecast', async (req: Request, res: Response) => {
 
     const forecastAPIRes: DailyForecasetAPIResponse = parsedJson.data;
 
-    // NOTE: The Open Weather Map API provides datetime data in seconds.
-    for (const item of forecastAPIRes) {
-      item.dt = item.dt * 1000;
-    }
     res.status(200).json(forecastAPIRes);
   } catch (error) {
     if (error instanceof Error) {

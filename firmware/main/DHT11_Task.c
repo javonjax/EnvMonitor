@@ -15,6 +15,7 @@ void vDHT11_Task(void *pvParameters)
             params->DHT11, params->temperature, params->humidity) == DHT_OK)
     {
       gpio_set_level(params->DHT11->led_pin_num, 1);
+      vTaskDelay(pdMS_TO_TICKS(1000));
       gpio_set_level(params->DHT11->led_pin_num, 0);
 
       msg.msg_data.temp = (*params->temperature * 9 / 5) + 32;
