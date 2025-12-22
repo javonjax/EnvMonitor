@@ -1,31 +1,30 @@
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart';
 import type { EnvMonitorData } from '@backend/types';
-import { AreaChart, CartesianGrid, XAxis, Area, YAxis } from 'recharts';
+import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from 'recharts';
 
-export interface TemperatureLineChartProps {
+export interface HumidityLineChartProps {
   lineChartData: EnvMonitorData[];
 }
-
-const TemperatureLineChart = ({ lineChartData }: TemperatureLineChartProps) => {
+const HumidityLineChart = ({ lineChartData }: HumidityLineChartProps) => {
   const chartData = lineChartData.map((item) => ({
     timestamp: new Date(item.timestamp).toLocaleTimeString('en-US', {
       hour: 'numeric',
       minute: 'numeric',
       weekday: 'short',
     }),
-    temperature: item.temperature,
+    humidity: item.humidity,
   }));
 
   return (
-    <div className="h-[200px] w-[80%]">
-      <ChartContainer config={{}} className="h-full w-full">
+    <div className="h-[80%] w-[80%]">
+      <ChartContainer config={{}} className="-ml-4 h-full w-full">
         <AreaChart accessibilityLayer data={chartData}>
           <CartesianGrid vertical={false} />
           <XAxis dataKey="timestamp" tickLine={false} axisLine={false} tickMargin={8} />
-          <YAxis dataKey="temperature" domain={['dataMin - 10', 'dataMax + 10']} tickLine={false} />
+          <YAxis dataKey="humidity" domain={['dataMin - 5', 'dataMax + 5']} tickLine={false} />
           <ChartTooltip cursor={false} content={<ChartTooltipContent indicator="line" />} />
           <Area
-            dataKey="temperature"
+            dataKey="humidity"
             type="natural"
             fill="var(--color-background)"
             fillOpacity={0.6}
@@ -38,4 +37,4 @@ const TemperatureLineChart = ({ lineChartData }: TemperatureLineChartProps) => {
   );
 };
 
-export default TemperatureLineChart;
+export default HumidityLineChart;

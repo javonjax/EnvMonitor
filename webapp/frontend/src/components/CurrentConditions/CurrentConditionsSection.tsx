@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import CurrentDateTime from './CurrentDateTime';
 import CurrentWeather from './CurrentWeather';
 import WeatherOverview from './WeatherOverview';
+import { errorToast, handleAPIError, handleAPIFetch, warningToast } from '@/lib/utils';
 
 export interface CurrentConditionsContentProps {
   currentDateTime: Date;
@@ -18,34 +19,36 @@ const CurrentConditionsSection = ({ currentDateTime }: CurrentConditionsContentP
     const fetchCurrentWeather = async (): Promise<void> => {
       try {
         const url: string = BACKEND_CURRENT_WEATHER_URL;
-        const res: globalThis.Response = await fetch(url);
+        const res: globalThis.Response = await handleAPIFetch(await fetch(url));
         const currentWeatherData: CurrentWeatherAPIResponse = await res.json();
         setCurrentWeather(currentWeatherData);
       } catch (error) {
-        // TODO: frontend error handling
         if (error instanceof Error) {
-          console.log(error.message);
+          handleAPIError(error);
+        } else {
+          errorToast();
         }
       }
     };
 
     fetchCurrentWeather();
-    // TODO: turn this off if not needed
-    // const interval = setInterval(() => {
-    //   fetchCurrentWeather();
-    // }, 600000);
 
-    // return () => clearInterval(interval);
+    // TODO: turn this off if not needed durign testing
+    const interval = setInterval(() => {
+      fetchCurrentWeather();
+    }, 600000);
+
+    return () => clearInterval(interval);
   }, []);
 
   return (
     <section className="bg-background col-span-full row-span-1 m-4 rounded-xl p-4 xl:col-span-6">
-      <div className="flex h-full gap-x-4">
-        <div className="flex h-full w-[50%] flex-col gap-y-6">
+      <div className="flex h-full flex-col gap-4 sm:flex-row">
+        <div className="flex h-full w-full flex-col gap-y-6 sm:w-[50%]">
           <CurrentDateTime currentDateTime={currentDateTime} />
           <CurrentWeather currentWeather={currentWeather} />
         </div>
-        <div className="flex h-full w-[50%]">
+        <div className="flex h-full w-full sm:w-[50%]">
           <WeatherOverview weatherOverview={currentWeather?.weatherOverview} />
         </div>
       </div>

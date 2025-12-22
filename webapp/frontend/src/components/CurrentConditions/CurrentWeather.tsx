@@ -1,6 +1,6 @@
 import type { CurrentWeatherAPIResponse } from '@backend/types';
 import LoadingSpinner from '../ui/Custom/LoadingSpinner';
-import { getForecastIcon } from '@/lib/utils';
+import { angleToDirectionString, getForecastIcon } from '@/lib/utils';
 import { SatelliteDish } from 'lucide-react';
 
 export interface CurrentWeatherProps {
@@ -8,17 +8,6 @@ export interface CurrentWeatherProps {
 }
 
 const CurrentWeather = ({ currentWeather }: CurrentWeatherProps) => {
-  const {
-    temp,
-    feelsLike,
-    humidity,
-    weatherDescription,
-    sunrise,
-    sunset,
-    windSpeed,
-    tempMin,
-    tempMax,
-  } = currentWeather ?? {};
   return (
     <div className="flex w-full grow flex-col gap-y-2">
       <div className="flex w-full items-center gap-x-2">
@@ -27,24 +16,33 @@ const CurrentWeather = ({ currentWeather }: CurrentWeatherProps) => {
       </div>
       {!currentWeather && <LoadingSpinner />}
       {currentWeather && (
-        <div className="bg-accent flex w-full grow items-center rounded-xl p-4">
-          <div className="flex h-full flex-col justify-center gap-y-2">
-            <p className="text-4xl font-semibold">{temp + '°F'}</p>
-            <p>Feels like: {feelsLike + '°F'}</p>
-            <div className="flex gap-x-2">
-              <p>H: {tempMax + '°F'}</p>
-              <p>L: {tempMin + '°F'}</p>
-            </div>
-            <p>Humidity: {humidity + '%'}</p>
-          </div>
-          <div className="flex grow items-center justify-center">
-            <div className="flex flex-col">
-              <div className="flex items-center justify-center">
-                {getForecastIcon(String(weatherDescription), 84)}
+        <div className="bg-accent flex w-full grow flex-col justify-center gap-4 rounded-xl p-4">
+          <div className="flex w-full grow gap-y-2">
+            <div className="flex h-full w-[50%] flex-col justify-center gap-y-2">
+              <p className="text-5xl font-semibold">{currentWeather.temp + '°F'}</p>
+              <p>Feels like: {currentWeather.feelsLike + '°F'}</p>
+              <div className="flex gap-x-2">
+                <p className="text-nowrap">L: {currentWeather.tempMin + '°F'}</p>
+                <p className="text-nowrap">H: {currentWeather.tempMax + '°F'}</p>
               </div>
-              <p className="text-center capitalize">{weatherDescription}</p>
+              <p>Humidity: {currentWeather.humidity + '%'}</p>
+              <p>
+                Wind: {currentWeather.windSpeed + ' MPH,'}{' '}
+                {angleToDirectionString(currentWeather.windDirection)}
+              </p>
+            </div>
+            <div className="flex w-[50%] grow items-center justify-center">
+              <div className="flex flex-col">
+                <div className="flex items-center justify-center">
+                  {getForecastIcon(String(currentWeather.weatherDescription), 84)}
+                </div>
+                <p className="text-center capitalize">{currentWeather.weatherDescription}</p>
+              </div>
             </div>
           </div>
+          <p className="w-full text-center">
+            Last update: {new Date(Number(currentWeather.timestamp)).toLocaleString()}
+          </p>
         </div>
       )}
     </div>

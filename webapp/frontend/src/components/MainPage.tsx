@@ -1,11 +1,10 @@
 import { useState, useEffect } from 'react';
 import type { EnvMonitorData } from '../../../backend/src/types';
-import DHT11Content from './DHT11/DHT11Content';
-import WeatherForecastContent from './WeatherForecast/WeatherForecastContent';
-import CurrentWeatherContent from './CurrentWeather/CurrentWeatherContent';
-import GeneralDiagnosticsContent from './GeneralDiagnostics/GeneralDiagnosticsContent';
-import CurrentDateTimeContent from './CurrentDateTime/CurrentDateTimeContent';
+
+import WeatherForecastContent from './WeatherForecast/WeatherForecastSection';
 import CurrentConditionsSection from './CurrentConditions/CurrentConditionsSection';
+import EnvironmentMonitorSection from './EnvironmentMonitor/EnvironmentMonitorSection';
+import { errorToast, handleAPIError, handleAPIFetch } from '@/lib/utils';
 
 const BACKEND_DATA_LATEST_URL: string = import.meta.env.VITE_BACKEND_DATA_LATEST_URL as string;
 const BACKEND_WEBSOCKET_URL: string = import.meta.env.VITE_BACKEND_WEBSOCKET_URL as string;
@@ -27,11 +26,19 @@ const MainPage = () => {
   // Get the latest values from the DB then wait for websocket updates.
   useEffect(() => {
     const fetchInitialData = async (): Promise<void> => {
-      const url: string = `${BACKEND_DATA_LATEST_URL}1`;
-      const res: globalThis.Response = await fetch(url);
-      const data = await res.json();
-      setWebSocketData(data);
-      return;
+      try {
+        const url: string = `${BACKEND_DATA_LATEST_URL}1`;
+        const res: globalThis.Response = await handleAPIFetch(await fetch(url));
+        const data = await res.json();
+        setWebSocketData(data);
+        return;
+      } catch (error) {
+        if (error instanceof Error) {
+          handleAPIError(error);
+        } else {
+          errorToast();
+        }
+      }
     };
     fetchInitialData();
   }, []);
@@ -52,18 +59,14 @@ const MainPage = () => {
 
   return (
     <div className="flex grow justify-center bg-black">
-      <div className="grid grow grid-cols-12 grid-rows-[500px_500px_500px]">
+      <div className="grid grow grid-cols-12">
         {/* Temp and humidity */}
-        {/* <CurrentDateTimeContent currentDateTime={currentDateTime} /> */}
+
         <CurrentConditionsSection currentDateTime={currentDateTime} />
-        {/* <CurrentWeatherContent /> */}
 
         <WeatherForecastContent />
-        <DHT11Content humidity={websocketData?.humidity} temperature={websocketData?.temperature} />
-        <GeneralDiagnosticsContent
-          waterLevel={websocketData?.waterLevel}
-          lastFeedTime={websocketData?.lastFeedTime}
-        />
+
+        <EnvironmentMonitorSection websocketData={websocketData} />
       </div>
     </div>
   );

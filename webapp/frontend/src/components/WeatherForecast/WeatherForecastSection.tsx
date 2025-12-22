@@ -32,16 +32,15 @@ const WeatherForecastContent = () => {
     return () => clearInterval(interval);
   }, []);
   return (
-    <div className="col-span-full row-span-1 p-4 lg:col-span-6">
+    <section className="col-span-full row-span-1 p-4 xl:col-span-6">
       <div className="bg-background flex h-full w-full flex-col rounded-xl p-4">
         <div className="flex w-full items-center gap-x-2">
           <CalendarDays size={32} />
           <p className="w-full text-2xl font-semibold">7-Day Weather Forecast</p>
         </div>
-
         <WeatherForecast weatherForecast={weatherForecast} />
       </div>
-    </div>
+    </section>
   );
 };
 

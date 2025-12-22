@@ -10,9 +10,9 @@ export interface TemperatureContentProps {
 
 const TemperatureContent = ({ temperature, lineChartData }: TemperatureContentProps) => {
   return (
-    <div className="bg-accent max-h-[250px flex h-full w-full flex-col gap-4 rounded-xl p-4">
+    <div className="bg-accent flex h-full w-full grow flex-col gap-4 rounded-xl p-4 xl:w-[40%]">
       <p className="text-xl">Temperature</p>
-      <div className="flex h-full w-full items-center gap-x-1">
+      <div className="flex h-full w-full items-center gap-x-1 xl:min-h-[360px]">
         {!(temperature && lineChartData) && <LoadingSpinner />}
         {temperature && lineChartData && (
           <>
