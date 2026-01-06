@@ -65,7 +65,7 @@ void vPublisher_Task(void *pvParameters)
       cJSON_AddStringToObject(root, "motionDetection", motion_detection_status);
       cJSON_AddNumberToObject(root, "lastMotionDetectedTime", last_motion_detected_timestamp);
       cJSON_AddStringToObject(root, "waterLevel", water_level);
-      cJSON_AddNumberToObject(root, "lastFeedTime", last_servo_trigger_timestamp);
+      cJSON_AddNumberToObject(root, "lastServoTriggerTime", last_servo_trigger_timestamp);
       cJSON_AddNumberToObject(root, "timestamp", timestamp);
       char *json_str = cJSON_PrintUnformatted(root);
       if (client->is_connected)
