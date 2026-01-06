@@ -19,7 +19,7 @@ const CurrentWeather = ({ currentWeather }: CurrentWeatherProps) => {
         <div className="bg-accent flex w-full grow flex-col justify-center gap-4 rounded-xl p-4">
           <div className="flex w-full grow gap-y-2">
             <div className="flex h-full w-[50%] flex-col justify-center gap-y-2">
-              <p className="text-5xl font-semibold">{currentWeather.temp + '°F'}</p>
+              <p className="text-5xl">{currentWeather.temp + '°F'}</p>
               <p>Feels like: {currentWeather.feelsLike + '°F'}</p>
               <div className="flex gap-x-2">
                 <p className="text-nowrap">L: {currentWeather.tempMin + '°F'}</p>
