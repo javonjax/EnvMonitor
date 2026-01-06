@@ -11,6 +11,8 @@
 #define PUB_TOPIC CONFIG_AWS_IOT_CORE_PUB_TOPIC
 #define SUB_TOPIC CONFIG_AWS_IOT_CORE_SUB_TOPIC
 
+extern bool isMQTTConnected;
+
 /**
  * MQTT client struct.
  */

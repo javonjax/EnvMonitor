@@ -5,6 +5,8 @@
 #include "esp_log.h"
 #include "cJSON.h"
 
+extern QueueHandle_t data_queue;
+
 // Base DHT11 task params struct.
 typedef struct
 {

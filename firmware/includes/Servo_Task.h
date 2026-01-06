@@ -3,6 +3,8 @@
 #include "freertos/task.h"
 #include "mqtt.h"
 
+extern volatile int current_water_level;
+
 // Base servo task params struct.
 typedef struct
 {

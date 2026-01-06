@@ -18,6 +18,8 @@
 #define GPIO_LOW 0
 #define GPIO_HIGH 1
 
+extern QueueHandle_t data_queue;
+
 // Base motion sensor task params struct.
 typedef struct
 {

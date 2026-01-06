@@ -10,6 +10,13 @@
 #include "freertos/task.h"
 #include <string.h>
 
+extern adc_oneshot_unit_handle_t adc1_handle;
+extern adc_cali_handle_t adc_cali_handle;
+extern QueueHandle_t data_queue;
+extern volatile int current_water_level;
+extern volatile int last_water_level;
+extern TaskHandle_t servo_task_handle;
+
 // Base water level sensor task params struct.
 typedef struct
 {

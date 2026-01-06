@@ -1,7 +1,5 @@
 #include "MotionSensor_Task.h"
 
-extern QueueHandle_t data_queue;
-
 void vMotionSensor_Task(void *pvParameters)
 {
   MotionSensor_TaskParams_t *params = (MotionSensor_TaskParams_t *)pvParameters;

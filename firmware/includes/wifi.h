@@ -11,6 +11,8 @@
 #define WIFI_CONNECTED_BIT BIT0
 #define WIFI_FAIL_BIT BIT1
 
+extern bool is_wifi_connected; // Flag to make sure wifi is connected.
+
 /**
  * @brief Initialize ESP32 in wifi station mode.
  *
