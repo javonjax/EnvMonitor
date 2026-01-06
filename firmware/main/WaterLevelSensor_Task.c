@@ -10,6 +10,8 @@ void vWaterLevelSensor_Task(void *pvParameters)
   mqtt_client_t *client = (mqtt_client_t *)params->mqtt_client_node;
   adc_channel_t sensor_channel = params->water_level_sensor->sensor_channel_num;
   int adc_raw, voltage;
+  TickType_t xLastWakeTime = xTaskGetTickCount();
+  const TickType_t xDelayPeriod = 20 * 1000 / portTICK_PERIOD_MS;
   data_queue_msg_t msg = {.source = WATER_LEVEL_SENSOR};
   while (1)
   {
@@ -33,6 +35,7 @@ void vWaterLevelSensor_Task(void *pvParameters)
     {
       xQueueSend(data_queue, &msg, portMAX_DELAY);
     }
-    vTaskDelay(pdMS_TO_TICKS(20000));
+
+    vTaskDelayUntil(&xLastWakeTime, xDelayPeriod);
   }
 };

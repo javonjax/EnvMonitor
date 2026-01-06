@@ -1,26 +1,28 @@
-#include "ServoFeeder_Task.h"
+#include "Servo_Task.h"
 #include <stdio.h>
 
-void vServoFeeder_Task(void *pvParameters)
+void vServo_Task(void *pvParameters)
 {
   while (1)
   {
-    ServoFeeder_TaskParams_t *params = (ServoFeeder_TaskParams_t *)pvParameters;
-    servo_feeder_t *servo_feeder = params->servo_feeder;
+    Servo_TaskParams_t *params = (Servo_TaskParams_t *)pvParameters;
+    servo_t *servo = params->servo;
     mqtt_client_t *client = params->mqtt_client_node;
     TickType_t xLastWakeTime = xTaskGetTickCount();
     // const TickType_t xDelayPeriod = 4 * 60 * 60 * 1000 / portTICK_PERIOD_MS;
     const TickType_t xDelayPeriod = 20 * 1000 / portTICK_PERIOD_MS;
-    data_queue_msg_t msg = {.source = SERVO_FEEDER};
+    data_queue_msg_t msg = {.source = SERVO_MOTOR};
     while (1)
     {
       UBaseType_t remaining = uxTaskGetStackHighWaterMark(NULL);
-      ESP_LOGI("Servo feeder", "Stack left: %u words", remaining);
-      ServoFeeder_Feed(servo_feeder);
+      ESP_LOGI("Servo motor", "Stack left: %u words", remaining);
+      Servo_Open(servo);
+      vTaskDelay(pdMS_TO_TICKS(2000));
+      Servo_Close(servo);
       struct timeval tv;
       gettimeofday(&tv, NULL);
       uint64_t timestamp = (uint64_t)(tv.tv_sec * 1000) + (tv.tv_usec / 1000);
-      msg.msg_data.last_feed_timestamp = timestamp;
+      msg.msg_data.last_servo_trigger_timestamp = timestamp;
 
       if (client->is_connected)
       {
