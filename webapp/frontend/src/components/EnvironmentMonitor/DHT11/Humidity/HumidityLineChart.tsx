@@ -10,18 +10,28 @@ const HumidityLineChart = ({ lineChartData }: HumidityLineChartProps) => {
     timestamp: new Date(item.timestamp).toLocaleTimeString('en-US', {
       hour: 'numeric',
       minute: 'numeric',
-      weekday: 'short',
+      year: '2-digit',
+      month: 'numeric',
+      day: 'numeric',
+      hour12: false,
     }),
     humidity: item.humidity,
   }));
 
   return (
-    <div className="h-[80%] w-[80%]">
+    <div className="h-[90%] w-[80%]">
       <ChartContainer config={{}} className="-ml-4 h-full w-full">
         <AreaChart accessibilityLayer data={chartData}>
           <CartesianGrid vertical={false} />
-          <XAxis dataKey="timestamp" tickLine={false} axisLine={false} tickMargin={8} />
-          <YAxis dataKey="humidity" domain={['dataMin - 5', 'dataMax + 5']} tickLine={false} />
+          <XAxis
+            dataKey="timestamp"
+            tickMargin={8}
+            minTickGap={32}
+            textAnchor="end"
+            angle={-45}
+            height={75}
+          />
+          <YAxis domain={[0, 100]} />
           <ChartTooltip cursor={false} content={<ChartTooltipContent indicator="line" />} />
           <Area
             dataKey="humidity"
