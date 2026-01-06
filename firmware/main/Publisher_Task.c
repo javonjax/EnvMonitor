@@ -1,8 +1,5 @@
 #include "Publisher_Task.h"
 
-extern QueueHandle_t data_queue;
-extern const char *MQTT_TAG;
-
 void vPublisher_Task(void *pvParameters)
 {
   mqtt_client_t *client = (mqtt_client_t *)pvParameters;

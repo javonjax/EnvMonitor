@@ -1,6 +1,5 @@
 #include "mqtt.h"
 
-extern bool isMQTTConnected;
 const char *MQTT_TAG = "MQTT";
 
 /*

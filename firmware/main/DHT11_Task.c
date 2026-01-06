@@ -1,7 +1,5 @@
 #include "DHT11_Task.h"
 
-extern QueueHandle_t data_queue;
-
 void vDHT11_Task(void *pvParameters)
 {
   DHT11_TaskParams_t *params = (DHT11_TaskParams_t *)pvParameters;

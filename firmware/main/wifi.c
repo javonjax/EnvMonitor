@@ -1,9 +1,9 @@
 #include "wifi.h"
 
 static EventGroupHandle_t s_wifi_event_group; // FreeRTOS event group to signal when we are connected
-extern bool is_wifi_connected;                // Flag to make sure wifi is connected.
+
 static int s_retry_num = 0;
-const char *WIFI_STATION_TAG = "wifi station";
+static const char *WIFI_STATION_TAG = "wifi station";
 
 /**
  * @brief Handles events triggered by wifi.

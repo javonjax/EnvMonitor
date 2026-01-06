@@ -14,19 +14,25 @@ void vServo_Task(void *pvParameters)
     data_queue_msg_t msg = {.source = SERVO_MOTOR};
     while (1)
     {
+      ulTaskNotifyTake(pdTRUE, portMAX_DELAY);
       UBaseType_t remaining = uxTaskGetStackHighWaterMark(NULL);
       ESP_LOGI("Servo motor", "Stack left: %u words", remaining);
-      Servo_Open(servo);
-      vTaskDelay(pdMS_TO_TICKS(2000));
-      Servo_Close(servo);
-      struct timeval tv;
-      gettimeofday(&tv, NULL);
-      uint64_t timestamp = (uint64_t)(tv.tv_sec * 1000) + (tv.tv_usec / 1000);
-      msg.msg_data.last_servo_trigger_timestamp = timestamp;
-
-      if (client->is_connected)
+      if (current_water_level > 0)
       {
-        xQueueSend(data_queue, &msg, portMAX_DELAY);
+        Servo_Open(servo);
+        struct timeval tv;
+        gettimeofday(&tv, NULL);
+        uint64_t timestamp = (uint64_t)(tv.tv_sec * 1000) + (tv.tv_usec / 1000);
+        msg.msg_data.last_servo_trigger_timestamp = timestamp;
+
+        if (client->is_connected)
+        {
+          xQueueSend(data_queue, &msg, portMAX_DELAY);
+        }
+      }
+      else
+      {
+        Servo_Close(servo);
       }
 
       vTaskDelayUntil(&xLastWakeTime, xDelayPeriod);

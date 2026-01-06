@@ -20,6 +20,9 @@ bool is_wifi_connected = false;
 mqtt_client_t mqtt_client_Node1;
 adc_cali_handle_t adc_cali_handle;
 adc_oneshot_unit_handle_t adc1_handle;
+TaskHandle_t servo_task_handle = NULL;
+volatile int current_water_level = 0;
+volatile int last_water_level = 0;
 QueueHandle_t data_queue;
 
 void app_main(void)
@@ -115,5 +118,5 @@ void app_main(void)
   xTaskCreate(vDHT11_Task, "DHT11", 2048, &DHT11_TaskParams, 1, NULL);
   xTaskCreate(vMotionSensor_Task, "Motion activated lights", 2400, &MotionSensor_TaskParams, 1, NULL);
   xTaskCreate(vWaterLevelSensor_Task, "Water level sensor", 2048, &WaterLevelSensor_TaskParams, 1, NULL);
-  xTaskCreate(vServo_Task, "Servo task", 2400, &Servo_TaskParams, 1, NULL);
+  xTaskCreate(vServo_Task, "Servo task", 2400, &Servo_TaskParams, 1, &servo_task_handle);
 }
