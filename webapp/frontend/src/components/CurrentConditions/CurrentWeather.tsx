@@ -12,14 +12,14 @@ const CurrentWeather = ({ currentWeather }: CurrentWeatherProps) => {
     <div className="flex w-full grow flex-col gap-y-2">
       <div className="flex w-full items-center gap-x-2">
         <SatelliteDish size={36} />
-        <p className="w-full text-2xl font-semibold">Current Weather</p>
+        <p className="w-full text-3xl font-semibold">Current Weather</p>
       </div>
       {!currentWeather && <LoadingSpinner />}
       {currentWeather && (
         <div className="bg-accent flex w-full grow flex-col justify-center gap-4 rounded-xl p-4">
           <div className="flex w-full grow gap-y-2">
             <div className="flex h-full w-[50%] flex-col justify-center gap-y-2">
-              <p className="text-5xl">{currentWeather.temp + '°F'}</p>
+              <p className="text-3xl">{currentWeather.temp + '°F'}</p>
               <p>Feels like: {currentWeather.feelsLike + '°F'}</p>
               <div className="flex gap-x-2">
                 <p className="text-nowrap">L: {currentWeather.tempMin + '°F'}</p>
@@ -34,9 +34,11 @@ const CurrentWeather = ({ currentWeather }: CurrentWeatherProps) => {
             <div className="flex w-[50%] grow items-center justify-center">
               <div className="flex flex-col">
                 <div className="flex items-center justify-center">
-                  {getForecastIcon(String(currentWeather.weatherDescription), 84)}
+                  {getForecastIcon(String(currentWeather.weatherDescription), 96)}
                 </div>
-                <p className="text-center capitalize">{currentWeather.weatherDescription}</p>
+                <p className="text-center text-[20px] capitalize">
+                  {currentWeather.weatherDescription}
+                </p>
               </div>
             </div>
           </div>

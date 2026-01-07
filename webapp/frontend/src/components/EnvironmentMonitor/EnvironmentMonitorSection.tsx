@@ -53,7 +53,7 @@ const EnvironmentMonitorSection = ({ websocketData }: EnvironmentMonitorSectionP
       <div className="bg-background flex h-full w-full flex-col gap-y-4 rounded-xl p-4">
         <div className="flex w-full items-center gap-x-2">
           <Wifi size={32} />
-          <p className="w-full text-2xl font-semibold">ESP32 Environment Monitor</p>
+          <p className="w-full text-3xl font-semibold">ESP32 Environment Monitor</p>
         </div>
 
         <div className="flex h-full w-full flex-col items-center gap-4 xl:flex-row">
@@ -62,7 +62,10 @@ const EnvironmentMonitorSection = ({ websocketData }: EnvironmentMonitorSectionP
             lineChartData={lineChartData}
           />
           <HumidityContent humidity={websocketData?.humidity} lineChartData={lineChartData} />
-          <WaterLevel waterLevel={websocketData?.waterLevel} />
+          <WaterLevel
+            waterLevel={websocketData?.waterLevel}
+            lastServoTriggerTime={websocketData?.lastServoTriggerTime}
+          />
         </div>
         {websocketData && (
           <p className="w-full text-center">
