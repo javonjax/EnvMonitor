@@ -3,13 +3,14 @@ import { Droplet, DropletOff } from 'lucide-react';
 
 export interface WaterLevelProps {
   waterLevel: string | undefined;
+  lastServoTriggerTime: number | undefined;
 }
 
-const WaterLevel = ({ waterLevel }: WaterLevelProps) => {
+const WaterLevel = ({ waterLevel, lastServoTriggerTime }: WaterLevelProps) => {
   return (
     <div className="h-full xl:w-[20%]">
       <div className="bg-accent flex h-full w-full flex-col items-center justify-center gap-y-4 rounded-xl p-4">
-        <p>Standing Water Level</p>
+        <p className="text-2xl">Standing Water Level</p>
         {(() => {
           switch (waterLevel) {
             case 'None':
@@ -23,6 +24,11 @@ const WaterLevel = ({ waterLevel }: WaterLevelProps) => {
           }
         })()}
         <p>{waterLevel}</p>
+
+        <p className="text-center">
+          Last drained: <br></br>
+          {new Date(Number(lastServoTriggerTime)).toLocaleString()}
+        </p>
       </div>
     </div>
   );

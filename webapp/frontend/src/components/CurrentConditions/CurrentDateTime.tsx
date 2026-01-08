@@ -10,14 +10,16 @@ const CurrentDateTime = ({ currentDateTime }: CurrentDateTimeProps) => {
           weekday: 'long',
         })}
       </p>
-      <p>
+      <p className="text-3xl">
         {currentDateTime.toLocaleDateString('en-US', {
           year: 'numeric',
           month: 'long',
           day: 'numeric',
         })}
       </p>
-      <p>{currentDateTime.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })}</p>
+      <p className="text-3xl">
+        {currentDateTime.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })}
+      </p>
     </div>
   );
 };

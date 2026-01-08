@@ -1,3 +1,7 @@
+/**
+ *  Datasheet for the water level sensor: hhttps://curtocircuito.com.br/datasheet/sensor/nivel_de_agua_analogico.pdf
+ */
+
 #pragma once
 
 #include "driver/gpio.h"

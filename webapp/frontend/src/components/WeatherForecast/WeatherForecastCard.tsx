@@ -7,9 +7,9 @@ export interface WeatherForecastCardProps {
 
 const WeatherForecastCard = ({ forecastDay }: WeatherForecastCardProps) => {
   return (
-    <div className="bg-accent flex h-[220px] w-[250px] shrink-0 items-center justify-center gap-y-2 rounded-xl p-4 xl:h-[50%] xl:min-h-[180px]">
+    <div className="bg-accent flex h-[420px] w-[350px] shrink-0 items-center justify-center gap-y-2 rounded-xl p-4 xl:h-[70%] xl:min-h-[180px]">
       <div className="flex w-[60%] flex-col">
-        <p className="text-xl">
+        <p className="text-2xl">
           {new Date(forecastDay.dt).toLocaleString('en-US', { weekday: 'long' })}
         </p>
 
@@ -24,8 +24,8 @@ const WeatherForecastCard = ({ forecastDay }: WeatherForecastCardProps) => {
         </div>
       </div>
       <div className="flex w-[40%] flex-col items-center justify-center">
-        {getForecastIcon(forecastDay.weatherDescription, 48)}
-        <p className="text-center text-[16px] capitalize">{forecastDay.weatherDescription}</p>
+        {getForecastIcon(forecastDay.weatherDescription, 72)}
+        <p className="text-center text-[20px] capitalize">{forecastDay.weatherDescription}</p>
       </div>
     </div>
   );

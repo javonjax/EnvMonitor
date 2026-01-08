@@ -38,7 +38,7 @@ const WeatherForecastContent = () => {
       <div className="bg-background flex h-full w-full flex-col rounded-xl p-4">
         <div className="flex w-full items-center gap-x-2">
           <CalendarDays size={32} />
-          <p className="w-full text-2xl font-semibold">7-Day Weather Forecast</p>
+          <p className="w-full text-3xl font-semibold">7-Day Weather Forecast</p>
         </div>
         <WeatherForecast weatherForecast={weatherForecast} />
       </div>

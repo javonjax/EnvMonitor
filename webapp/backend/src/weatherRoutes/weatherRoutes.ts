@@ -5,7 +5,7 @@ import {
   DailyForecastAPIResponseSchema,
   type CurrentWeatherAPIResponse,
   type DailyForecasetAPIResponse,
-} from '../types';
+} from '../types.js';
 
 const OPEN_WEATHER_MAP_API_KEY: string = process.env.OPEN_WEATHER_MAP_API_KEY as string;
 const OPEN_WEATHER_MAP_ONECALL_URL: string = process.env.OPEN_WEATHER_MAP_ONECALL_URL as string;

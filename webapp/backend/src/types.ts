@@ -39,6 +39,18 @@ export const CurrentWeatherSchema = z
   })
   .strip();
 
+type DailyForecastDayInput = {
+  dt: number;
+  summary: string;
+  temp: {
+    day: number;
+    min: number;
+    max: number;
+  };
+  humidity: number;
+  weather: z.infer<typeof WeatherDescriptionSchema>[];
+};
+
 export const DailyForecastDaySchema = z
   .object({
     dt: z.number(),
@@ -52,7 +64,7 @@ export const DailyForecastDaySchema = z
     weather: z.array(WeatherDescriptionSchema),
   })
   .strip()
-  .transform((data) => ({
+  .transform((data: DailyForecastDayInput) => ({
     dt: data.dt * 1000, // NOTE: Open weather map reports timestamps in seconds.
     summary: data.summary,
     temp: Math.round(data.temp.day),
@@ -65,14 +77,24 @@ export const DailyForecastDaySchema = z
 
 export type DailyForecastDay = z.infer<typeof DailyForecastDaySchema>;
 
+type DailyForecastAPIResponseInput = {
+  daily: z.infer<typeof DailyForecastDaySchema>[];
+};
+
 export const DailyForecastAPIResponseSchema = z
   .object({
     daily: z.array(DailyForecastDaySchema),
   })
   .strip()
-  .transform((data) => data.daily);
+  .transform((data: DailyForecastAPIResponseInput) => data.daily);
 
 export type DailyForecasetAPIResponse = z.infer<typeof DailyForecastAPIResponseSchema>;
+
+type CurrentWeatherAPIResponseInput = {
+  current: z.infer<typeof CurrentWeatherSchema>;
+  daily: z.infer<typeof DailyForecastDaySchema>[];
+  weather_overview: string;
+};
 
 export const CurrentWeatherAPIResponseSchema = z
   .object({
@@ -81,7 +103,7 @@ export const CurrentWeatherAPIResponseSchema = z
     weather_overview: z.string(),
   })
   .strip()
-  .transform((data) => ({
+  .transform((data: CurrentWeatherAPIResponseInput) => ({
     dt: data.current.dt * 1000, // NOTE: Open weather map reports timestamps in seconds.
     feelsLike: Math.round(data.current.feels_like),
     temp: Math.round(data.current.temp),
