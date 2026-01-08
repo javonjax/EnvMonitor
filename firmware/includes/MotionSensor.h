@@ -1,3 +1,7 @@
+/**
+ *  Datasheet for the HC-SR501 PIR motion sensor: https://www.mpja.com/download/31227sc.pdf
+ */
+
 #pragma once
 
 #include "driver/gpio.h"

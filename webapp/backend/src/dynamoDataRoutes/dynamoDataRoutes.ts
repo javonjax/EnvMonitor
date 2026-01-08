@@ -1,13 +1,18 @@
 import express, { type Request, response, type Response, Router } from 'express';
 import dotenv from 'dotenv';
-import { DynamoDBClient, QueryCommand, type QueryCommandOutput } from '@aws-sdk/client-dynamodb';
+import {
+  DynamoDBClient,
+  QueryCommand,
+  type AttributeValue,
+  type QueryCommandOutput,
+} from '@aws-sdk/client-dynamodb';
 import { unmarshall } from '@aws-sdk/util-dynamodb';
 import {
   EnvMonitorDataArraySchema,
   EnvMonitorDataSchema,
   type EnvMonitorData,
   type EnvMonitorDataArray,
-} from '../types';
+} from '../types.js';
 
 dotenv.config();
 const router: Router = express.Router();
@@ -42,7 +47,9 @@ router.get('/data/recent/:node', async (req: Request, res: Response) => {
     });
 
     const dynamoRes: QueryCommandOutput = await dynamoClient.send(cmd);
-    const jsonArrayRes: unknown = dynamoRes.Items?.reverse().map((item) => unmarshall(item)) ?? [];
+    const jsonArrayRes: unknown =
+      dynamoRes.Items?.reverse().map((item: Record<string, AttributeValue>) => unmarshall(item)) ??
+      [];
     const parsedJson = EnvMonitorDataArraySchema.safeParse(jsonArrayRes);
     if (!parsedJson.success) {
       throw new Error('API response does not fit the desired schema.');
@@ -79,7 +86,8 @@ router.get('/data/latest/:node', async (req: Request, res: Response) => {
       Limit: 1,
     });
     const dynamoRes = await dynamoClient.send(cmd);
-    const jsonRes = dynamoRes.Items?.map((item) => unmarshall(item)) ?? [];
+    const jsonRes =
+      dynamoRes.Items?.map((item: Record<string, AttributeValue>) => unmarshall(item)) ?? [];
     const parsedJson = EnvMonitorDataSchema.safeParse(jsonRes[0]);
     if (!parsedJson.success) {
       throw new Error('API response does not fit the desired schema.');

@@ -5,9 +5,10 @@ import http from 'http';
 import { WebSocketServer, type Server } from 'ws';
 import fs from 'fs';
 import dotenv from 'dotenv';
-import { EnvMonitorDataSchema, type EnvMonitorData } from './types';
-import dynamoDataRoutes from './dynamoDataRoutes/dynamoDataRoutes';
-import weatherRoutes from './weatherRoutes/weatherRoutes';
+import { EnvMonitorDataSchema, type EnvMonitorData } from './types.js';
+import dynamoDataRoutes from './dynamoDataRoutes/dynamoDataRoutes.js';
+import weatherRoutes from './weatherRoutes/weatherRoutes.js';
+import type Stream from 'stream';
 
 dotenv.config();
 
@@ -36,7 +37,7 @@ app.use(weatherRoutes);
 
 // MQTT handlers
 mqttClient.on('connect', () => {
-  mqttClient.subscribe(process.env.ENV_MONITOR_DATA_TOPIC as string, (err) => {
+  mqttClient.subscribe(process.env.ENV_MONITOR_DATA_TOPIC as string, (err: Error | null) => {
     if (err) {
       console.error(err.message);
     } else {
@@ -46,7 +47,7 @@ mqttClient.on('connect', () => {
   console.log('MQTT connected.');
 });
 
-mqttClient.on('message', (topic, message) => {
+mqttClient.on('message', (topic: string, message: Buffer<ArrayBufferLike>) => {
   if (topic === (process.env.ENV_MONITOR_DATA_TOPIC as string)) {
     try {
       const payload: unknown = JSON.parse(message.toString());
@@ -66,12 +67,7 @@ mqttClient.on('message', (topic, message) => {
   }
 });
 
-wss.on('connection', () => console.log('Client connected to websocket.'));
-
-// Routes
-app.get('/', (req: Request, res: Response) => {
-  res.send('Hello, TypeScript with Express!');
-});
+// wss.on('connection', () => console.log('Client connected to websocket.'));
 
 // Start Server
 const server = http.createServer(app);
@@ -80,12 +76,15 @@ server.listen(port, () => {
 });
 
 // Handle WebSocket upgrade
-server.on('upgrade', (request, socket, head) => {
-  if (request.url === '/ws') {
-    wss.handleUpgrade(request, socket, head, (ws) => {
-      wss.emit('connection', ws, request);
-    });
-  } else {
-    socket.destroy();
+server.on(
+  'upgrade',
+  (request: http.IncomingMessage, socket: Stream.Duplex, head: NonSharedBuffer) => {
+    if (request.url === '/ws') {
+      wss.handleUpgrade(request, socket, head, (ws) => {
+        wss.emit('connection', ws, request);
+      });
+    } else {
+      socket.destroy();
+    }
   }
-});
+);
