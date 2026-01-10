@@ -1,5 +1,41 @@
 import { z } from 'zod';
 
+export interface EnvParams {
+  '/certs/AmazonRootCA1.pem': string;
+  '/certs/certificate.pem.crt': string;
+  '/certs/private.pem.key': string;
+  '/env/AWS_DYNAMO_TABLE': string;
+  '/env/AWS_IOT_CORE_BACKEND_CLIENT_ID': string;
+  '/env/AWS_IOT_CORE_DEVICE_NAME_BASE': string;
+  '/env/AWS_IOT_CORE_ENDPOINT': string;
+  '/env/ENV_MONITOR_DATA_TOPIC': string;
+  '/env/OPEN_WEATHER_MAP_API_KEY': string;
+  '/env/OPEN_WEATHER_MAP_ONECALL_URL': string;
+  '/env/STATION_LATITUDE': string;
+  '/env/STATION_LONGITUDE': string;
+}
+
+export type EnvConfig = {
+  mqtt: {
+    host: string;
+    deviceNameBase: string;
+    clientId: string;
+    topic: string;
+    key: Buffer<ArrayBufferLike>;
+    cert: Buffer<ArrayBufferLike>;
+    ca: Buffer<ArrayBufferLike>;
+  };
+  dynamo: {
+    table: string;
+  };
+  weather: {
+    apiUrl: string;
+    apiKey: string;
+    latitude: string;
+    longitude: string;
+  };
+};
+
 export const EnvMonitorDataSchema = z.object({
   temperature: z.number(),
   humidity: z.number(),

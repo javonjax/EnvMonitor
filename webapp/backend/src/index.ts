@@ -5,86 +5,99 @@ import http from 'http';
 import { WebSocketServer, type Server } from 'ws';
 import fs from 'fs';
 import dotenv from 'dotenv';
-import { EnvMonitorDataSchema, type EnvMonitorData } from './types.js';
+import { EnvMonitorDataSchema, type EnvConfig, type EnvMonitorData } from './types.js';
 import dynamoDataRoutes from './dynamoDataRoutes/dynamoDataRoutes.js';
 import weatherRoutes from './weatherRoutes/weatherRoutes.js';
 import type Stream from 'stream';
+import { loadConfig } from './config.js';
 
 dotenv.config();
 
-const app: Express = express();
-const port: number = 3000;
-const lat: string = process.env.STATION_LATITUDE as string;
-const lon: string = process.env.STATION_LONGITUDE as string;
-const OPEN_WEATHER_MAP_API_KEY: string = process.env.OPEN_WEATHER_MAP_API_KEY as string;
+const main = async () => {
+  try {
+    const app: Express = express();
+    const port: number = 3000;
 
-const wss: Server = new WebSocketServer({ noServer: true });
-const mqttClient: mqtt.MqttClient = mqtt.connect({
-  host: process.env.AWS_IOT_CORE_ENDPOINT as string,
-  port: 8883,
-  protocol: 'mqtts',
-  key: fs.readFileSync(process.env.AWS_IOT_CORE_PRIVATE_KEY_PATH as string),
-  cert: fs.readFileSync(process.env.AWS_IOT_CORE_CERT_PATH as string),
-  ca: fs.readFileSync(process.env.AWS_IOT_CORE_CA_PATH as string),
-  clientId: process.env.AWS_IOT_CORE_BACKEND_CLIENT_ID as string,
-});
-
-// Middleware
-app.use(express.json());
-app.use(cors());
-app.use(dynamoDataRoutes);
-app.use(weatherRoutes);
-
-// MQTT handlers
-mqttClient.on('connect', () => {
-  mqttClient.subscribe(process.env.ENV_MONITOR_DATA_TOPIC as string, (err: Error | null) => {
-    if (err) {
-      console.error(err.message);
-    } else {
-      console.log('Subscribed to topic.');
+    const config: EnvConfig = await loadConfig();
+    if (!config) {
+      throw new Error('Failed to load config.');
     }
-  });
-  console.log('MQTT connected.');
-});
 
-mqttClient.on('message', (topic: string, message: Buffer<ArrayBufferLike>) => {
-  if (topic === (process.env.ENV_MONITOR_DATA_TOPIC as string)) {
-    try {
-      const payload: unknown = JSON.parse(message.toString());
-      const parsedData = EnvMonitorDataSchema.safeParse(payload);
-      if (!parsedData.success) {
-        throw new Error('MQTT message does not fit the desired schema.');
-      }
-      console.log(payload);
-      wss.clients.forEach((client) => {
-        if (client.readyState === client.OPEN) {
-          client.send(JSON.stringify(payload));
+    // Middleware
+    app.use(express.json());
+    app.use(cors());
+    app.use(dynamoDataRoutes(config));
+    app.use(weatherRoutes(config));
+
+    // MQTT
+    const mqttClient: mqtt.MqttClient = mqtt.connect({
+      host: config.mqtt.host,
+      port: 8883,
+      protocol: 'mqtts',
+      key: config.mqtt.key,
+      cert: config.mqtt.cert,
+      ca: config.mqtt.ca,
+      clientId: config.mqtt.clientId,
+    });
+
+    mqttClient.on('connect', () => {
+      mqttClient.subscribe(config.mqtt.topic, (err: Error | null) => {
+        if (err) {
+          console.error(err.message);
+        } else {
+          console.log('Subscribed to topic.');
         }
       });
-    } catch (err) {
-      console.log(err);
-    }
+      console.log('MQTT connected.');
+    });
+
+    mqttClient.on('message', (topic: string, message: Buffer<ArrayBufferLike>) => {
+      if (topic === (config.mqtt.topic as string)) {
+        try {
+          const payload: unknown = JSON.parse(message.toString());
+          const parsedData = EnvMonitorDataSchema.safeParse(payload);
+          if (!parsedData.success) {
+            throw new Error('MQTT message does not fit the desired schema.');
+          }
+          console.log(payload);
+          wss.clients.forEach((client) => {
+            if (client.readyState === client.OPEN) {
+              client.send(JSON.stringify(payload));
+            }
+          });
+        } catch (err) {
+          console.log(err);
+        }
+      }
+    });
+
+    // Websocket
+    const wss: Server = new WebSocketServer({ noServer: true });
+    wss.on('connection', () => console.log('Client connected to websocket.'));
+
+    // Start Server
+    const server = http.createServer(app);
+    server.listen(port, () => {
+      console.log(`Server is running at http://localhost:${port}`);
+    });
+
+    // Handle WebSocket upgrade
+    server.on(
+      'upgrade',
+      (request: http.IncomingMessage, socket: Stream.Duplex, head: NonSharedBuffer) => {
+        if (request.url === '/ws') {
+          wss.handleUpgrade(request, socket, head, (ws) => {
+            wss.emit('connection', ws, request);
+          });
+        } else {
+          socket.destroy();
+        }
+      }
+    );
+  } catch (error) {
+    console.error('Failed to start backend server: ', error);
+    process.exit(1);
   }
-});
+};
 
-// wss.on('connection', () => console.log('Client connected to websocket.'));
-
-// Start Server
-const server = http.createServer(app);
-server.listen(port, () => {
-  console.log(`Server is running at http://localhost:${port}`);
-});
-
-// Handle WebSocket upgrade
-server.on(
-  'upgrade',
-  (request: http.IncomingMessage, socket: Stream.Duplex, head: NonSharedBuffer) => {
-    if (request.url === '/ws') {
-      wss.handleUpgrade(request, socket, head, (ws) => {
-        wss.emit('connection', ws, request);
-      });
-    } else {
-      socket.destroy();
-    }
-  }
-);
+main();
