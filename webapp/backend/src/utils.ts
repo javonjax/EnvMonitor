@@ -3,8 +3,10 @@ import dotenv from 'dotenv';
 import {
   SSMClient,
   GetParametersCommand,
+  GetParametersByPathCommand,
   type GetParametersCommandOutput,
   type Parameter,
+  type GetParametersByPathCommandOutput,
 } from '@aws-sdk/client-ssm';
 import type { EnvConfig, EnvParams } from './types.js';
 dotenv.config();
@@ -13,7 +15,15 @@ const NODE_ENV: string = process.env.NODE_ENV as string;
 const AWS_REGION: string = process.env.AWS_REGION as string;
 
 const ssm: SSMClient | null =
-  NODE_ENV === 'production' ? new SSMClient({ region: AWS_REGION }) : null;
+  NODE_ENV === 'production'
+    ? new SSMClient({
+        region: AWS_REGION,
+        credentials: {
+          accessKeyId: process.env.AWS_ACCESS_KEY_ID as string,
+          secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY as string,
+        },
+      })
+    : null;
 
 const paramNames: (keyof EnvParams)[] = [
   '/certs/AmazonRootCA1.pem',
@@ -30,6 +40,50 @@ const paramNames: (keyof EnvParams)[] = [
   '/env/STATION_LONGITUDE',
 ];
 
+/**
+ * @brief GET parameter values by path.
+ * @param path Path name.
+ * @returns Partial EnvParams object.
+ */
+const getParamsByPath = async (path: string): Promise<Partial<EnvParams>> => {
+  if (!ssm) {
+    throw new Error('SSM client is not available.');
+  }
+
+  const params: EnvParams = {} as EnvParams;
+  let nextToken: string | undefined;
+
+  do {
+    const cmd: GetParametersByPathCommand = new GetParametersByPathCommand({
+      Path: path,
+      Recursive: true,
+      WithDecryption: true,
+      NextToken: nextToken,
+    });
+
+    const res: GetParametersByPathCommandOutput = await ssm.send(cmd);
+
+    if (!res.Parameters) {
+      throw new Error(`Unable to fetch parameters.`);
+    }
+
+    for (const p of res.Parameters) {
+      if (p.Name && p.Value) {
+        params[p.Name as keyof EnvParams] = p.Value;
+      }
+    }
+
+    nextToken = res.NextToken;
+  } while (nextToken);
+
+  return params;
+};
+
+/**
+ * @brief GET parameter values by name.
+ * @param names Array of param names.
+ * @returns EnvParams object.
+ */
 const getParams = async (names: (keyof EnvParams)[]): Promise<EnvParams> => {
   if (!ssm) {
     throw new Error('SSM client is not available.');
@@ -64,10 +118,20 @@ const getParams = async (names: (keyof EnvParams)[]): Promise<EnvParams> => {
 export const generateConfig = async (): Promise<EnvConfig> => {
   let config: EnvConfig;
   if (NODE_ENV === 'production') {
-    const params: EnvParams = await getParams(paramNames);
+    const envVariables: Partial<EnvParams> = await getParamsByPath('/env');
+    const certs: Partial<EnvParams> = await getParamsByPath('/certs');
+    const params: EnvParams = { ...envVariables, ...certs } as EnvParams;
+
     if (!params) {
       throw new Error('No parameters found.');
     }
+
+    for (const name of paramNames) {
+      if (!params[name]) {
+        throw new Error(`Missing parameter: ${name}`);
+      }
+    }
+
     config = {
       mqtt: {
         host: params['/env/AWS_IOT_CORE_ENDPOINT'],
