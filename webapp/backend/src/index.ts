@@ -84,28 +84,11 @@ const main = async () => {
     wss.on('connection', () => console.log('Client connected to websocket.'));
 
     // Start Server
-    let server:
-      | http.Server<typeof http.IncomingMessage, typeof http.ServerResponse>
-      | https.Server<typeof http.IncomingMessage, typeof http.ServerResponse>;
 
-    if (NODE_ENV === 'development') {
-      server = http.createServer(app);
-      server.listen(port, () => {
-        console.log(`Server is running at http://localhost:${port}`);
-      });
-    } else {
-      const httpsOptions: https.ServerOptions<
-        typeof http.IncomingMessage,
-        typeof http.ServerResponse
-      > = {
-        key: fs.readFileSync('/etc/letsencrypt/live/envmonitorbackend.duckdns.org/privkey.pem'),
-        cert: fs.readFileSync('/etc/letsencrypt/live/envmonitorbackend.duckdns.org/fullchain.pem'),
-      };
-      server = https.createServer(httpsOptions, app);
-      server.listen(443, () => {
-        console.log('Server running on port 443.');
-      });
-    }
+    const server = http.createServer(app);
+    server.listen(port, () => {
+      console.log(`Server is running at http://localhost:${port}`);
+    });
 
     // Handle WebSocket upgrade
     server.on('upgrade', (request: http.IncomingMessage, socket: Stream.Duplex, head: Buffer) => {
