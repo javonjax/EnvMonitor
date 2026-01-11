@@ -2,6 +2,7 @@ import express, { application, type Express, type Request, type Response } from 
 import cors from 'cors';
 import mqtt from 'mqtt';
 import http from 'http';
+import https, { type ServerOptions } from 'https';
 import { WebSocketServer, type Server } from 'ws';
 import fs from 'fs';
 import dotenv from 'dotenv';
@@ -11,6 +12,7 @@ import weatherRoutes from './weatherRoutes/weatherRoutes.js';
 import type Stream from 'stream';
 import { loadConfig } from './config.js';
 
+const NODE_ENV: string = process.env.NODE_ENV as string;
 dotenv.config();
 
 const main = async () => {
@@ -25,7 +27,13 @@ const main = async () => {
 
     // Middleware
     app.use(express.json());
-    app.use(cors());
+    app.use(
+      cors({
+        origin: ['http://localhost:5173', 'https://iot-env-monitor-esp-32.vercel.app/'],
+        methods: 'GET,POST,PUT,DELETE',
+        allowedHeaders: 'Content-Type,Authorization',
+      })
+    );
     app.use(dynamoDataRoutes(config));
     app.use(weatherRoutes(config));
 
@@ -76,24 +84,39 @@ const main = async () => {
     wss.on('connection', () => console.log('Client connected to websocket.'));
 
     // Start Server
-    const server = http.createServer(app);
-    server.listen(port, () => {
-      console.log(`Server is running at http://localhost:${port}`);
-    });
+    let server:
+      | http.Server<typeof http.IncomingMessage, typeof http.ServerResponse>
+      | https.Server<typeof http.IncomingMessage, typeof http.ServerResponse>;
+
+    if (NODE_ENV === 'development') {
+      server = http.createServer(app);
+      server.listen(port, () => {
+        console.log(`Server is running at http://localhost:${port}`);
+      });
+    } else {
+      const httpsOptions: https.ServerOptions<
+        typeof http.IncomingMessage,
+        typeof http.ServerResponse
+      > = {
+        key: fs.readFileSync('/etc/letsencrypt/live/envmonitorbackend.duckdns.org/privkey.pem'),
+        cert: fs.readFileSync('/etc/letsencrypt/live/envmonitorbackend.duckdns.org/fullchain.pem'),
+      };
+      server = https.createServer(httpsOptions, app);
+      server.listen(443, () => {
+        console.log('Server running on port 443.');
+      });
+    }
 
     // Handle WebSocket upgrade
-    server.on(
-      'upgrade',
-      (request: http.IncomingMessage, socket: Stream.Duplex, head: NonSharedBuffer) => {
-        if (request.url === '/ws') {
-          wss.handleUpgrade(request, socket, head, (ws) => {
-            wss.emit('connection', ws, request);
-          });
-        } else {
-          socket.destroy();
-        }
+    server.on('upgrade', (request: http.IncomingMessage, socket: Stream.Duplex, head: Buffer) => {
+      if (request.url === '/ws') {
+        wss.handleUpgrade(request, socket, head, (ws) => {
+          wss.emit('connection', ws, request);
+        });
+      } else {
+        socket.destroy();
       }
-    );
+    });
   } catch (error) {
     console.error('Failed to start backend server: ', error);
     process.exit(1);
