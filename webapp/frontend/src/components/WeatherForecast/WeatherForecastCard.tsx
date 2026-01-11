@@ -1,5 +1,5 @@
+import type { DailyForecastDay } from '@/lib/types';
 import { getForecastIcon } from '@/lib/utils';
-import type { DailyForecastDay } from '@backend/types';
 
 export interface WeatherForecastCardProps {
   forecastDay: DailyForecastDay;

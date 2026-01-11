@@ -1,9 +1,9 @@
-import type { CurrentWeatherAPIResponse } from '@backend/types';
 import { useState, useEffect } from 'react';
 import CurrentDateTime from './CurrentDateTime';
 import CurrentWeather from './CurrentWeather';
 import WeatherOverview from './WeatherOverview';
 import { errorToast, handleAPIError, handleAPIFetch } from '@/lib/utils';
+import type { CurrentWeatherAPIResponse } from '@/lib/types';
 
 export interface CurrentConditionsContentProps {
   currentDateTime: Date;

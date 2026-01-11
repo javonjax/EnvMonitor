@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
-import type { DailyForecasetAPIResponse } from '@backend/types';
+
 import WeatherForecast from './WeatherForecast';
 import { CalendarDays } from 'lucide-react';
 import { errorToast, handleAPIError, handleAPIFetch } from '@/lib/utils';
+import type { DailyForecasetAPIResponse } from '@/lib/types';
 
 const BACKEND_WEATHER_FORECAST_URL = import.meta.env.VITE_BACKEND_WEATHER_FORECAST_URL as string;
 

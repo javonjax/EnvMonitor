@@ -1,6 +1,6 @@
-import type { DailyForecasetAPIResponse, DailyForecastDay } from '@backend/types';
 import WeatherForecastCard from './WeatherForecastCard';
 import LoadingSpinner from '../ui/Custom/LoadingSpinner';
+import type { DailyForecasetAPIResponse, DailyForecastDay } from '@/lib/types';
 
 export interface WeatherForecastProps {
   weatherForecast: DailyForecasetAPIResponse | undefined;

@@ -1,5 +1,5 @@
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart';
-import type { EnvMonitorData } from '@backend/types';
+import type { EnvMonitorData } from '@/lib/types';
 import { AreaChart, CartesianGrid, XAxis, Area, YAxis } from 'recharts';
 
 export interface TemperatureLineChartProps {

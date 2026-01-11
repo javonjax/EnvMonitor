@@ -1,10 +1,9 @@
 import { useState, useEffect } from 'react';
-import type { EnvMonitorData } from '../../../backend/src/types';
-
 import WeatherForecastContent from './WeatherForecast/WeatherForecastSection';
 import CurrentConditionsSection from './CurrentConditions/CurrentConditionsSection';
 import EnvironmentMonitorSection from './EnvironmentMonitor/EnvironmentMonitorSection';
 import { errorToast, handleAPIError, handleAPIFetch } from '@/lib/utils';
+import type { EnvMonitorData } from '@/lib/types';
 
 const BACKEND_DATA_LATEST_URL: string = import.meta.env.VITE_BACKEND_DATA_LATEST_URL as string;
 const BACKEND_WEBSOCKET_URL: string = import.meta.env.VITE_BACKEND_WEBSOCKET_URL as string;

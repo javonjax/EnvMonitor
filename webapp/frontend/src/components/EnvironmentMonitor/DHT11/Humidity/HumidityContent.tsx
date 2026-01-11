@@ -1,4 +1,4 @@
-import type { EnvMonitorData } from '@backend/types';
+import type { EnvMonitorData } from '@/lib/types';
 import HumidityCurrentValue from './HumidityCurrentValue';
 import HumidityLineChart from './HumidityLineChart';
 import LoadingSpinner from '@/components/ui/Custom/LoadingSpinner';

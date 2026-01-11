@@ -1,4 +1,4 @@
-import type { CurrentWeatherAPIResponse } from '@backend/types';
+import type { CurrentWeatherAPIResponse } from '@/lib/types';
 import LoadingSpinner from '../ui/Custom/LoadingSpinner';
 import { angleToDirectionString, getForecastIcon } from '@/lib/utils';
 import { SatelliteDish } from 'lucide-react';

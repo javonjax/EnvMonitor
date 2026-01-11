@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react';
-import type { EnvMonitorData } from '../../../../backend/src/types';
+
 import HumidityContent from './DHT11/Humidity/HumidityContent';
 import TemperatureContent from './DHT11/Temperature/TemperatureContent';
 import { Wifi } from 'lucide-react';
 import WaterLevel from './WaterLevel/WaterLevel';
 import { errorToast, handleAPIError, handleAPIFetch } from '@/lib/utils';
+import type { EnvMonitorData } from '@/lib/types';
 
 const BACKEND_DATA_RECENT_URL: string = import.meta.env.VITE_BACKEND_DATA_RECENT_URL as string;
 

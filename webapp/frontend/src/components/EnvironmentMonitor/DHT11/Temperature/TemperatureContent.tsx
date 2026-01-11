@@ -1,4 +1,4 @@
-import type { EnvMonitorData } from '@backend/types';
+import type { EnvMonitorData } from '@/lib/types';
 import TemperatureCurrentValue from './TemperatureCurrentValue';
 import TemperatureLineChart from './TemperatureLineChart';
 import LoadingSpinner from '@/components/ui/Custom/LoadingSpinner';
