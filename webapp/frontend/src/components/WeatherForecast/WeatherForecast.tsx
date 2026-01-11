@@ -1,4 +1,4 @@
-import type { DailyForecasetAPIResponse } from '@backend/types';
+import type { DailyForecasetAPIResponse, DailyForecastDay } from '@backend/types';
 import WeatherForecastCard from './WeatherForecastCard';
 import LoadingSpinner from '../ui/Custom/LoadingSpinner';
 
@@ -14,7 +14,7 @@ const WeatherForecast = ({ weatherForecast }: WeatherForecastProps) => {
         weatherForecast.length > 0 &&
         weatherForecast
           .slice(1)
-          .map((forecastDay) => (
+          .map((forecastDay: DailyForecastDay) => (
             <WeatherForecastCard key={forecastDay.dt} forecastDay={forecastDay} />
           ))}
     </div>

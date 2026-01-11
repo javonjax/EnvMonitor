@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import CurrentDateTime from './CurrentDateTime';
 import CurrentWeather from './CurrentWeather';
 import WeatherOverview from './WeatherOverview';
-import { errorToast, handleAPIError, handleAPIFetch, warningToast } from '@/lib/utils';
+import { errorToast, handleAPIError, handleAPIFetch } from '@/lib/utils';
 
 export interface CurrentConditionsContentProps {
   currentDateTime: Date;
