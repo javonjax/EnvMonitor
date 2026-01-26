@@ -1,4 +1,6 @@
 # ESP32 Environment Monitoring System
+This application is hosted on [Vercel](https://vercel.com/)
+https://iot-env-monitor-esp-32.vercel.app/
 
 ## Description
 The ESP32 environment monitoring system is an IoT project that collects real-time environmentall data using an ESP32 microcontroller and siplays it through a React web page. The system monitors conditions such as temperature, humidity, 
