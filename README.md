@@ -1,5 +1,6 @@
 # ESP32 Environment Monitoring System
-This application is hosted on [Vercel](https://vercel.com/)
+This application is hosted on [Vercel](https://vercel.com/) <br/>
+<br/>
 https://iot-env-monitor-esp-32.vercel.app/
 
 ## Description
