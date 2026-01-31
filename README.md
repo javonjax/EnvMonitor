@@ -8,7 +8,7 @@ The ESP32 environment monitoring system is an IoT project that collects real-tim
 and standing water level and sends data to the AWS cloud using MQTT. This project combines embedded systems, networking, and web technologies to create a complete end-to-end monitoring solution. 
 The ESP32 reads sensor data at regular intervals, processes it locally, and transmits it to the cloud to be used for visualization and analysis.
 
-## Technologiese Used
+## Technologies Used
 - [ESP-IDF](https://docs.espressif.com/projects/esp-idf/en/stable/esp32/get-started/index.html)
 - [React](https://react.dev/)
 - [Express.js](https://expressjs.com/)
