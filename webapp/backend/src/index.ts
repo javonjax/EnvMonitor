@@ -1,4 +1,10 @@
-import express, { application, type Express, type Request, type Response } from 'express';
+import express, {
+  application,
+  type Express,
+  type NextFunction,
+  type Request,
+  type Response,
+} from 'express';
 import cors from 'cors';
 import mqtt from 'mqtt';
 import http from 'http';
@@ -32,10 +38,13 @@ const main = async () => {
         origin: ['http://localhost:5173', 'https://iot-env-monitor-esp-32.vercel.app'],
         methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
         allowedHeaders: ['Content-Type', 'Authorization'],
-      })
+      }),
     );
     app.use(dynamoDataRoutes(config));
     app.use(weatherRoutes(config));
+    app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
+      res.status(500).json({ message: err.message || 'Internal server error.' });
+    });
 
     // MQTT
     const mqttClient: mqtt.MqttClient = mqtt.connect({
@@ -67,7 +76,6 @@ const main = async () => {
           if (!parsedData.success) {
             throw new Error('MQTT message does not fit the desired schema.');
           }
-          console.log(payload);
           wss.clients.forEach((client) => {
             if (client.readyState === client.OPEN) {
               client.send(JSON.stringify(payload));
@@ -87,7 +95,7 @@ const main = async () => {
 
     const server = http.createServer(app);
     server.listen(port, () => {
-      console.log(`Server is running at http://localhost:${port}`);
+      console.log(`Server is running.`);
     });
 
     // Handle WebSocket upgrade

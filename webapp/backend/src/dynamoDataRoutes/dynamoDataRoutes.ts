@@ -35,82 +35,67 @@ export const dynamoDataRoutes = (config: EnvConfig): Router => {
   }
 
   /**
-   * GET the last 24 hours of data from the specified device node.
+   * GET the 50 most recent data rows for the specified device node.
    */
   router.get('/data/recent/:node', async (req: Request, res: Response) => {
-    try {
-      const node: string = req.params.node || '1';
-      // const queryTime: number = Date.now() - 24 * 3600 * 1000;
-      const cmd = new QueryCommand({
-        TableName: config.dynamo.table,
-        KeyConditionExpression: '#dn = :device',
-        ExpressionAttributeNames: {
-          '#dn': 'deviceName',
-        },
-        ExpressionAttributeValues: {
-          ':device': { S: `${config.mqtt.deviceNameBase}${node}` },
-        },
-        ScanIndexForward: false,
-        Limit: 50,
-        ConsistentRead: true,
-      });
+    const node: string = req.params.node || '1';
+    // const queryTime: number = Date.now() - 24 * 3600 * 1000;
+    const cmd = new QueryCommand({
+      TableName: config.dynamo.table,
+      KeyConditionExpression: '#dn = :device',
+      ExpressionAttributeNames: {
+        '#dn': 'deviceName',
+      },
+      ExpressionAttributeValues: {
+        ':device': { S: `${config.mqtt.deviceNameBase}${node}` },
+      },
+      ScanIndexForward: false,
+      Limit: 50,
+      ConsistentRead: true,
+    });
 
-      const dynamoRes: QueryCommandOutput = await dynamoClient.send(cmd);
-      const jsonArrayRes: unknown =
-        dynamoRes.Items?.reverse().map((item: Record<string, AttributeValue>) =>
-          unmarshall(item)
-        ) ?? [];
-      const parsedJson = EnvMonitorDataArraySchema.safeParse(jsonArrayRes);
-      if (!parsedJson.success) {
-        throw new Error('API response does not fit the desired schema.');
-      }
-      const dataAPIRes: EnvMonitorDataArray = parsedJson.data;
-      res.status(200).json(dataAPIRes);
-      return;
-    } catch (error) {
-      if (error instanceof Error) {
-        res.status(500).json({ message: error.message });
-        return;
-      }
+    const dynamoRes: QueryCommandOutput = await dynamoClient.send(cmd);
+    const jsonArrayRes: unknown =
+      dynamoRes.Items?.reverse().map((item: Record<string, AttributeValue>) => unmarshall(item)) ??
+      [];
+    const parsedJson = EnvMonitorDataArraySchema.safeParse(jsonArrayRes);
+    if (!parsedJson.success) {
+      throw new Error('API response does not fit the desired schema.');
     }
+    const dataAPIRes: EnvMonitorDataArray = parsedJson.data;
+    res.status(200).json(dataAPIRes);
+    return;
   });
 
   /**
-   * GET the latest data from the specified device node.
+   * GET the latest single data row for the specified device node.
    */
   router.get('/data/latest/:node', async (req: Request, res: Response) => {
-    try {
-      const node: string = req.params.node || '1';
-      const cmd = new QueryCommand({
-        TableName: config.dynamo.table,
-        KeyConditionExpression: '#dn = :device',
-        ExpressionAttributeNames: {
-          '#dn': 'deviceName',
+    const node: string = req.params.node || '1';
+    const cmd = new QueryCommand({
+      TableName: config.dynamo.table,
+      KeyConditionExpression: '#dn = :device',
+      ExpressionAttributeNames: {
+        '#dn': 'deviceName',
+      },
+      ExpressionAttributeValues: {
+        ':device': {
+          S: `${config.mqtt.deviceNameBase}${node}`,
         },
-        ExpressionAttributeValues: {
-          ':device': {
-            S: `${config.mqtt.deviceNameBase}${node}`,
-          },
-        },
-        ScanIndexForward: false,
-        Limit: 1,
-      });
-      const dynamoRes: QueryCommandOutput = await dynamoClient.send(cmd);
-      const jsonRes =
-        dynamoRes.Items?.map((item: Record<string, AttributeValue>) => unmarshall(item)) ?? [];
-      const parsedJson = EnvMonitorDataSchema.safeParse(jsonRes[0]);
-      if (!parsedJson.success) {
-        throw new Error('API response does not fit the desired schema.');
-      }
-      const dataAPIRes: EnvMonitorData = parsedJson.data;
-      res.status(200).json(dataAPIRes);
-      return;
-    } catch (error) {
-      if (error instanceof Error) {
-        res.status(500).json({ message: error.message });
-        return;
-      }
+      },
+      ScanIndexForward: false,
+      Limit: 1,
+    });
+    const dynamoRes: QueryCommandOutput = await dynamoClient.send(cmd);
+    const jsonRes =
+      dynamoRes.Items?.map((item: Record<string, AttributeValue>) => unmarshall(item)) ?? [];
+    const parsedJson = EnvMonitorDataSchema.safeParse(jsonRes[0]);
+    if (!parsedJson.success) {
+      throw new Error('API response does not fit the desired schema.');
     }
+    const dataAPIRes: EnvMonitorData = parsedJson.data;
+    res.status(200).json(dataAPIRes);
+    return;
   });
 
   return router;
