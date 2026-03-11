@@ -16,6 +16,8 @@ const CurrentConditionsSection = ({ currentDateTime }: CurrentConditionsContentP
   const [currentWeather, setCurrentWeather] = useState<CurrentWeatherAPIResponse>();
 
   useEffect(() => {
+    let componentIsMounted: boolean = true;
+
     const fetchCurrentWeather = async (): Promise<void> => {
       try {
         const url: string = BACKEND_CURRENT_WEATHER_URL;
@@ -31,14 +33,18 @@ const CurrentConditionsSection = ({ currentDateTime }: CurrentConditionsContentP
       }
     };
 
-    fetchCurrentWeather();
+    const pollWeatherAPI = async (): Promise<void> => {
+      await fetchCurrentWeather();
+      if (componentIsMounted) {
+        setTimeout(pollWeatherAPI, 600000);
+      }
+    };
 
-    // TODO: turn this off if not needed durign testing
-    const interval = setInterval(() => {
-      fetchCurrentWeather();
-    }, 600000);
+    pollWeatherAPI();
 
-    return () => clearInterval(interval);
+    return () => {
+      componentIsMounted = false;
+    };
   }, []);
 
   return (

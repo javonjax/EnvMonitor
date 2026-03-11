@@ -27,7 +27,6 @@ const EnvironmentMonitorSection = ({ websocketData }: EnvironmentMonitorSectionP
         const url: string = `${BACKEND_DATA_RECENT_URL}1`;
         const res: globalThis.Response = await handleAPIFetch(await fetch(url));
         const data = await res.json();
-        console.log(data);
         setLineChartData(data);
       } catch (error) {
         if (error instanceof Error) {
