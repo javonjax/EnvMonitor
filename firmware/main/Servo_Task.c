@@ -12,6 +12,7 @@ void vServo_Task(void *pvParameters)
     // const TickType_t xDelayPeriod = 4 * 60 * 60 * 1000 / portTICK_PERIOD_MS;
     const TickType_t xDelayPeriod = 20 * 1000 / portTICK_PERIOD_MS;
     data_queue_msg_t msg = {.source = SERVO_MOTOR};
+    Servo_Close(servo);
     while (1)
     {
       ulTaskNotifyTake(pdTRUE, portMAX_DELAY);

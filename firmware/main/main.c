@@ -115,8 +115,8 @@ void app_main(void)
   // Create tasks.
   printf("Creating %s tasks\n", mqtt_client_Node1.client_id);
   xTaskCreate(vPublisher_Task, "MQTT Publisher", 4096, &mqtt_client_Node1, 3, NULL);
-  xTaskCreate(vDHT11_Task, "DHT11", 2048, &DHT11_TaskParams, 1, NULL);
+  xTaskCreate(vDHT11_Task, "DHT11", 2400, &DHT11_TaskParams, 1, NULL);
   xTaskCreate(vMotionSensor_Task, "Motion activated lights", 2400, &MotionSensor_TaskParams, 1, NULL);
-  xTaskCreate(vWaterLevelSensor_Task, "Water level sensor", 2048, &WaterLevelSensor_TaskParams, 1, NULL);
+  xTaskCreate(vWaterLevelSensor_Task, "Water level sensor", 2400, &WaterLevelSensor_TaskParams, 1, NULL);
   xTaskCreate(vServo_Task, "Servo task", 2400, &Servo_TaskParams, 1, &servo_task_handle);
 }

@@ -7,7 +7,7 @@ void vWaterLevelSensor_Task(void *pvParameters)
   adc_channel_t sensor_channel = params->water_level_sensor->sensor_channel_num;
   int adc_raw, voltage;
   TickType_t xLastWakeTime = xTaskGetTickCount();
-  const TickType_t xDelayPeriod = 10 * 1000 / portTICK_PERIOD_MS;
+  const TickType_t xDelayPeriod = pdMS_TO_TICKS(10000);
   data_queue_msg_t msg = {.source = WATER_LEVEL_SENSOR};
   while (1)
   {

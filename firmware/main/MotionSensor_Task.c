@@ -9,7 +9,7 @@ void vMotionSensor_Task(void *pvParameters)
   gpio_num_t led_pin = motion_sensor->led_pin_num;
   gpio_num_t button_pin = motion_sensor->button_pin_num;
   uint8_t last_button_status = 1;
-  uint8_t use_motion_detection = 1;
+  uint8_t use_motion_detection = 0;
   int counter = 0;
   uint64_t last_motion_detected_timestamp = 0;
   data_queue_msg_t msg = {
