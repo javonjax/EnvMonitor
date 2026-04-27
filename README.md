@@ -34,6 +34,8 @@ The ESP32 reads sensor data at regular intervals, processes it locally, and tran
 - [SG90 Servo Motor](https://www.amazon.com/WWZMDiB-SG90-Control-Servos-Arduino/dp/B0BKPL2Y21?th=1)
 - [Water Level Sensor](http://tinkersphere.com/sensors/2196-water-level-sensor.html?srsltid=AfmBOooob_0oDgB4s576PeH1b4sZ0JsbzsB-p1rb1TIRR7mPuoLo_c3wsQ8)
 
+## Screenshots
+![dashboard](dashboard.png)
 ## Contact Me
 
 👤 Javon Jackson  
