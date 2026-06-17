@@ -19,7 +19,7 @@ The ESP32 reads sensor data at regular intervals, processes it locally, and tran
 - WiFi connectivity and MQTT messaging.
 - Web-based dashboard for analyzing live and historical data.
 - Periodic sensor sampling and data updates.
-- Servo controlled emergency relief valve for removing standing water.
+- Servo controlled ventilation.
 - Motion activated lights for in-person monitoring.
 
 ## Hardware
